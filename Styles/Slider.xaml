@@ -1,0 +1,382 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    mc:Ignorable="d"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+
+    <ResourceDictionary.MergedDictionaries>
+
+        <ResourceDictionary Source="Color.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+
+    <Style x:Key="InactiveScrollRepeatButtonStyle"
+                               d:IsControlPart="True"
+                               TargetType="{x:Type RepeatButton}">
+        <Setter Property="Background"
+                                    Value="Transparent" />
+        <Setter Property="BorderBrush"
+                                    Value="Transparent" />
+        <Setter Property="IsTabStop"
+                                    Value="false" />
+        <Setter Property="Focusable"
+                                    Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Border 
+                            Height="6"
+                            CornerRadius="0,3,3,0" 
+                            BorderBrush="Transparent" 
+                            Opacity="0.38"
+                            Background="{DynamicResource PrimaryHueLightBrush}" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ActiveScrollRepeatButtonStyle"
+                               d:IsControlPart="True"
+                               TargetType="{x:Type RepeatButton}">
+        <Setter Property="Background"
+                                    Value="Transparent" />
+        <Setter Property="BorderBrush"
+                                    Value="Transparent" />
+        <Setter Property="IsTabStop"
+                                    Value="false" />
+        <Setter Property="Focusable"
+                                    Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Border Height="6"
+                                CornerRadius="3,0,0,3" 
+                                BorderBrush="Transparent" 
+                                Background="{DynamicResource PrimaryHueMidBrush}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="VolumeSliderThumb"
+           d:IsControlPart="True"
+           TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels"
+                Value="true" />
+        <Setter Property="Height"
+                Value="20" />
+        <Setter Property="Width"
+                Value="30" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="HoverOn">
+                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="HoverShineBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
+                                                      Value="1" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="HoverBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
+                                                      Value="1" />
+                            </DoubleAnimationUsingKeyFrames>
+
+                        </Storyboard>
+                        <Storyboard x:Key="HoverOff">
+                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="HoverShineBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000"
+                                                      Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="HoverBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000"
+                                                      Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+
+                        </Storyboard>
+                        <Storyboard x:Key="PressedOn">
+
+                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="PressedBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
+                                                      Value="1" />
+                            </DoubleAnimationUsingKeyFrames>
+
+                        </Storyboard>
+                        <Storyboard x:Key="PressedOff">
+
+                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="PressedBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000"
+                                                      Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+
+                        </Storyboard>
+                        <Storyboard x:Key="FocusedOn">
+                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="FocusVisualElement"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
+                                                      Value="1" />
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                        <Storyboard x:Key="FocussedOff">
+                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="FocusVisualElement"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000"
+                                                      Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <Grid>
+                        <Border x:Name="Background"
+                                Background="{DynamicResource PrimaryHueMidBrush}"
+                                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3" />
+                        <Border x:Name="HoverBorder"
+                                Opacity="0"
+                                Background="{DynamicResource PrimaryHueBrush}"
+                                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3" />
+                        <Border x:Name="HoverShineBorder"
+                                Opacity="0"
+                                Background="{DynamicResource HoverShineBrush}"
+                                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3" />
+                        <Border x:Name="PressedBorder"
+                                Opacity="0"
+                                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3"
+                                Background="{StaticResource VerticalPressedBrush}" />
+                        <Border x:Name="ShineBorder"
+                                BorderBrush="{DynamicResource PrimaryHueDarkBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3"
+                                Background="{StaticResource VerticalShineBrush}"
+                                Opacity="1" />
+                        <Grid>
+                            <Canvas materialDesign:ElevationAssist.Elevation="Dp2">
+                                <Canvas Margin="1,0,0,0">
+                                    <Rectangle Width="1.5"
+                                               Height="10"
+                                               Fill="#11FFFFFF"
+                                               Canvas.Left="9"
+                                               Canvas.Top="5" />
+                                    <Rectangle Width="1.5"
+                                               Height="10"
+                                               Fill="#11FFFFFF"
+                                               Canvas.Left="14"
+                                               Canvas.Top="5" />
+                                    <Rectangle Width="1.5"
+                                               Height="10"
+                                               Fill="#11FFFFFF"
+                                               Canvas.Left="19"
+                                               Canvas.Top="5" />
+                                </Canvas>
+                                <Rectangle Width="1.5"
+                                           Height="10"
+                                           Fill="#66000000"
+                                           Canvas.Left="9"
+                                           Canvas.Top="5" />
+                                <Rectangle Width="1.5"
+                                           Height="10"
+                                           Fill="#66000000"
+                                           Canvas.Left="14"
+                                           Canvas.Top="5" />
+                                <Rectangle Width="1.5"
+                                           Height="10"
+                                           Fill="#66000000"
+                                           Canvas.Left="19"
+                                           Canvas.Top="5" />
+                            </Canvas>
+
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Trigger.ExitActions>
+                                <BeginStoryboard Storyboard="{StaticResource HoverOff}"
+                                                 x:Name="HoverOff_BeginStoryboard" />
+                            </Trigger.ExitActions>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
+                            </Trigger.EnterActions>
+                        </Trigger>
+                        <Trigger Property="IsDragging"
+                                                     Value="True">
+                            <Trigger.ExitActions>
+                                <BeginStoryboard Storyboard="{StaticResource PressedOff}"
+                                                 x:Name="PressedOff_BeginStoryboard" />
+                            </Trigger.ExitActions>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource PressedOn}"
+                                                 x:Name="PressedOn_BeginStoryboard" />
+                            </Trigger.EnterActions>
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                                     Value="false">
+                            <Setter Property="Background"
+                                    TargetName="Background"
+                                    Value="{DynamicResource DisabledBackgroundBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background"
+                Value="{DynamicResource NormalBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource NormalBorderBrush}" />
+        <Setter 
+            Property="BorderThickness"
+            Value="1,1,1,1" />
+    </Style>
+    <Style TargetType="{x:Type Slider}"
+           x:Key="VolumeSlider">
+        <Setter Property="Background"
+                Value="{DynamicResource NormalBrush}" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource NormalBorderBrush}" />
+        <Setter Property="Minimum"
+                Value="-1.0" />
+        <Setter Property="Maximum"
+                Value="1.0" />
+        <Setter Property="SmallChange"
+                Value="0.01" />
+        <Setter Property="LargeChange"
+                Value="0.1" />
+        <Setter Property="Orientation"
+                Value="Vertical" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Slider}">
+                    <Grid x:Name="GridRoot">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition 
+                                Height="Auto"
+                                MinHeight="{TemplateBinding MinHeight}" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TickBar 
+                            Visibility="Collapsed"
+                             x:Name="TopTick"
+                             Height="4"
+                             Margin="0, 0, 0, 2"
+                             SnapsToDevicePixels="True"
+                             Placement="Top"
+                             Fill="{DynamicResource PrimaryHueMidBrush}" />
+                        <Border 
+                            Grid.Row="1"
+                            Margin="0"
+                            x:Name="Border"
+                            Height="4"
+                            CornerRadius="3"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="1,1,1,1" />
+                        <Track 
+                            Grid.Row="1"
+                            x:Name="PART_Track">
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton 
+                                    Style="{DynamicResource InactiveScrollRepeatButtonStyle}"
+                                    Command="Slider.IncreaseLarge" />
+                            </Track.IncreaseRepeatButton>
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton 
+                                    Style="{DynamicResource ActiveScrollRepeatButtonStyle}"
+                                    Command="Slider.DecreaseLarge" />
+                            </Track.DecreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb 
+                                    Style="{DynamicResource VolumeSliderThumb}"
+                                    Background="{DynamicResource NormalBrush}"
+                                    Foreground="{x:Null}" />
+
+                            </Track.Thumb>
+                        </Track>
+                        <TickBar Visibility="Collapsed"
+                                                     Grid.Row="2"
+                                                     Margin="0, 2, 0, 0"
+                                                     x:Name="BottomTick"
+                                                     Height="4"
+                                                     SnapsToDevicePixels="True"
+                                                     Placement="Bottom"
+                                                     Fill="{DynamicResource PrimaryHueMidBrush}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="TickPlacement"
+                                                     Value="TopLeft">
+                            <Setter Property="Visibility"
+                                                        Value="Visible"
+                                                        TargetName="TopTick" />
+                        </Trigger>
+                        <Trigger Property="TickPlacement"
+                                                     Value="BottomRight">
+                            <Setter Property="Visibility"
+                                                        Value="Visible"
+                                                        TargetName="BottomTick" />
+                        </Trigger>
+                        <Trigger Property="TickPlacement"
+                                                     Value="Both">
+                            <Setter Property="Visibility"
+                                                        Value="Visible"
+                                                        TargetName="TopTick" />
+                            <Setter Property="Visibility"
+                                                        Value="Visible"
+                                                        TargetName="BottomTick" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                                     Value="false">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource DisabledBackgroundBrush}"
+                                    TargetName="Border" />
+                            <Setter 
+                                Property="BorderBrush"
+                                Value="{DynamicResource DisabledBorderBrush}"
+                                TargetName="Border" />
+                        </Trigger>
+                        <Trigger 
+                            Property="Orientation"
+                            Value="Vertical">
+                            <Setter 
+                                Property="LayoutTransform"
+                                TargetName="GridRoot">
+                                <Setter.Value>
+                                    <RotateTransform Angle="-90" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter 
+                                TargetName="PART_Track"
+                                Property="Orientation"
+                                Value="Horizontal" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

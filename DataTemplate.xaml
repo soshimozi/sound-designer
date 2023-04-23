@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:SoundDesigner.ViewModel"
+                    xmlns:view="clr-namespace:SoundDesigner.View">
+
+    <DataTemplate DataType="{x:Type vm:HomePageViewModel}">
+        <view:HomePage />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+        <view:SettingsPage />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SoundGenerationViewModel}">
+        <view:SoundGenerationPage />
+    </DataTemplate>
+
+
+</ResourceDictionary>

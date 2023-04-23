@@ -1,0 +1,125 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SoundDesigner"
+                    xmlns:controls="clr-namespace:SoundDesigner.Controls">
+
+
+    <DrawingBrush x:Key="ThatchBackground" Viewport="0,0,15,15" ViewportUnits="Absolute" Stretch="None" TileMode="Tile">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#C92F2F2F">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,60,60"/>
+                            <RectangleGeometry Rect="60,60,60,60"/>
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#C92D2D2D">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,60,60"/>
+                            <RectangleGeometry Rect="60,60,60,60"/>
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+
+    <Style TargetType="{x:Type controls:RectangleControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:RectangleControl}">
+                    <Grid Background="Transparent"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:AudioJack}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:AudioJack}">
+                    <Grid Background="Transparent">
+                        <Image Source="Assets/Possible_SVG_Jack.png"></Image>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ControlPanel}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ControlPanel}">
+                    <Canvas x:Name="PART_PanelCanvas" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:MainPanel}" BasedOn="{StaticResource {x:Type controls:ControlPanel}}">
+        <!-- additional setters or triggers for MainPanel -->
+        <Style.Resources>
+            <ImageBrush x:Key="BackgroundBrush" ImageSource="Assets/background-texture.png"/>
+        </Style.Resources>
+
+         <Setter Property="Width" Value="800" />
+        <Setter Property="Height" Value="600" />
+    </Style>
+
+    <Style TargetType="{x:Type controls:Cable}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:Cable}">
+                    <Grid Background="Transparent"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:KnobControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:KnobControl}">
+                    <Grid x:Name="PART_MainGrid" Background="Transparent">
+                        <Image x:Name="PART_Image" Stretch="None"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!--<DrawingBrush x:Key="BackgroundBrush" Viewport="0,0,15,15" ViewportUnits="Absolute" Stretch="None" TileMode="Tile">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#C92F2F2F">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,60,60"/>
+                            <RectangleGeometry Rect="60,60,60,60"/>
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#C92D2D2D">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,60,60"/>
+                            <RectangleGeometry Rect="60,60,60,60"/>
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>-->
+
+
+    <SolidColorBrush x:Key="BackgroundBrush">
+        <SolidColorBrush.Color>#323232</SolidColorBrush.Color>
+    </SolidColorBrush>
+
+
+</ResourceDictionary>

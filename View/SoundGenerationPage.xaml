@@ -1,0 +1,1222 @@
+﻿<UserControl x:Class="SoundDesigner.View.SoundGenerationPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SoundDesigner.View"
+             xmlns:viewModel="clr-namespace:SoundDesigner.ViewModel"
+             xmlns:converters="clr-namespace:SoundDesigner.Converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:helpers="clr-namespace:SoundDesigner.Helpers"
+             xmlns:controls="clr-namespace:SoundDesigner.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="1000">
+    <UserControl.DataContext>
+        <viewModel:SoundGenerationViewModel />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+
+        <Style x:Key="SynthLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Label}">
+                        <Border Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              RecognizesAccessKey="True"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" Value=".56" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+        </Style>
+        <DataTemplate x:Key="WhiteKeyTemplate">
+            <Button 
+                Command="{Binding Path=Tag.KeyCommand, RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}" 
+                CommandParameter="{Binding }" 
+                BorderBrush="Black"
+                BorderThickness="1" 
+                Background="White" 
+                Width="40" 
+                Height="160">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="0,0,5,5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="LightGray" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="DarkGray" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DataTemplate>
+        <DataTemplate x:Key="BlackKeyTemplate">
+            <Button 
+                Command="{Binding Path=Tag.KeyCommand, RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}" 
+                CommandParameter="{Binding }" 
+                BorderBrush="Black" 
+                BorderThickness="1" 
+                Background="Black" 
+                Width="30" 
+                Height="100">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="0,0,5,5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#222" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#555" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DataTemplate>
+        <converters:NoteToCanvasLocationConverter x:Key="NoteToCanvasLocationConverter"/>
+        <converters:NoteToZIndexConverter x:Key="NoteToZIndexConverter" />
+        <converters:RoundingValueConverter x:Key="RoundingValueConverter"/>
+        <converters:FrequencyValueConverter x:Key="FrequencyValueConverter" />
+        <converters:DefaultValueConverter x:Key="DefaultValueConverter"/>
+        <converters:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
+
+        <Style x:Key="FadingBorderStyle" TargetType="Border">
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#676767" />
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Background" Value="#d2cac5"/>
+            <Setter Property="Opacity" Value="0" />
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                     From="0" To="1" Duration="0:0:1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <DataTrigger Binding="{Binding Path=Visibility, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityToBooleanConverter}}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                         From="0" To="1" Duration="0:0:1" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Visibility, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityToBooleanConverter}}" Value="False">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                         From="1" To="0" Duration="0:0:1" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <Style TargetType="controls:KnobControl" x:Key="FixedSizeControl">
+            <Setter Property="Width" Value="64"></Setter>
+            <Setter Property="Height" Value="64"></Setter>
+        </Style>
+        <Style TargetType="GroupBox" x:Key="FieldsetStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Grid>
+                            <Border BorderBrush="{DynamicResource SecondaryHueLightBrush}" BorderThickness="2" CornerRadius="2" Margin="0,6,0,0" Padding="10">
+                                <ContentPresenter />
+                            </Border>
+                            <TextBlock 
+                                Text="{TemplateBinding Header}" 
+                                Margin="8, 0, 0, 0" 
+                                Grid.ZIndex="2" 
+                                Foreground="{DynamicResource PrimaryHueLightBrush}" 
+                                Background="#222"
+                                Padding="2"
+                                Width="Auto"
+                                FontFamily="/Fonts/#Syncopate"
+                                HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Top" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontFamily" Value="/Fonts/#Syncopate" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Border BorderBrush="Blue" BorderThickness="3" Padding="10" CornerRadius="10" Background="#222">
+            <Grid HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <GroupBox Grid.Column="0" Header="Mod" Style="{StaticResource FieldsetStyle}" Margin="4, 0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <ComboBox Grid.Row="0" Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                  Margin="0, 10, 0, 0"
+                                  materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryHueLightBrush}"
+                                  materialDesign:ColorZoneAssist.Mode="Dark"
+                                  materialDesign:HintAssist.Hint="Shape"
+                                  ItemsSource="{Binding Shapes}" 
+                                  SelectedItem="{Binding SelectedShape, Mode=TwoWay}"  
+                                  VerticalAlignment="Top" 
+                                  HorizontalAlignment="Left"
+                                  Width="90"
+                                  FontFamily="/Fonts/#Syncopate"
+                                  ToolTipService.ToolTip="Please select a shape.">
+
+                        </ComboBox>
+                        <Grid Grid.Row="1" Margin="0, 25, 0, 0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid Margin="0, 10, 0, 0">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Style="{StaticResource FadingBorderStyle}">
+                                    <Label Content="{Binding Path=ModFrequency, Converter={StaticResource RoundingValueConverter}, ConverterParameter=1}"
+                                           Style="{StaticResource SynthLabelStyle}" />
+                                </Border>
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Value="{Binding Path=ModFrequency, Mode=TwoWay}"
+                                    Margin="0,2,0,0" 
+                                    Step="10"
+                                    Maximum="10" 
+                                    Minimum="0"
+                                    Width="64" 
+                                    Height="64">
+
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                       Foreground="White" FontWeight="Bold"
+                                       Content="freq" />
+
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="1" VerticalAlignment="Bottom">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=Osc1Tremolo}" />
+                                </Border>
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Value="{Binding Path=Osc1Tremolo, Mode=TwoWay}" 
+                                    Margin="0,2,0,0" 
+                                    Minimum="0"
+                                    Maximum="100"
+                                    Step="10"
+                                    Width="64" 
+                                    Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center" Padding="0, 5, 0, 0"
+                                       Foreground="White" FontWeight="Bold"
+                                       Content="osc1" />
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                       Foreground="White" FontWeight="Bold"
+                                       Content="tremolo" />
+
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="2" VerticalAlignment="Bottom" Margin="0, 20, 0, 0">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=Osc2Tremolo}" />
+                                </Border>
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Margin="0,2,0,0" 
+                                    Minimum="0"
+                                    Maximum="100"
+                                    Step="10"
+                                    Value="{Binding Path=Osc2Tremolo, Mode=TwoWay}" 
+                                    Width="64" 
+                                    Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center" Padding="0, 5, 0, 0"
+                                       Foreground="White" FontWeight="Bold"
+                                       Content="osc2" />
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                       Foreground="White" FontWeight="Bold"
+                                       Content="tremolo" />
+                                </StackPanel>
+
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Header="OSC1" Style="{StaticResource FieldsetStyle}" Margin="0">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel>
+                                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                          Margin="0, 10, 20, 0"
+                                          materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryHueLightBrush}"
+                                          materialDesign:ColorZoneAssist.Mode="Dark"
+                                          materialDesign:HintAssist.Hint="waveform"
+                                          ItemsSource="{Binding Shapes}" 
+                                          SelectedItem="{Binding Osc1Waveform, Mode=TwoWay}"  
+                                          VerticalAlignment="Top" 
+                                          HorizontalAlignment="Left"
+                                          Width="110"
+                                          FontFamily="/Fonts/#Syncopate"
+                                          ToolTipService.ToolTip="Please select a waveform.">
+                                </ComboBox>
+                                <Grid Margin="0, 10, 0, 0" VerticalAlignment="Bottom">
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Border Style="{StaticResource FadingBorderStyle}">
+                                        <Label Style="{StaticResource SynthLabelStyle}"
+                                               Content="{Binding Path=Osc1Detune, Converter={StaticResource DefaultValueConverter}}" />
+                                    </Border>
+                                    <StackPanel Grid.Row="1">
+
+                                        <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Value="{Binding Path=Osc1Detune, Mode=TwoWay}" 
+                                    Margin="0,2,0,0" 
+                                    Maximum="1200"
+                                    Minimum="-1200"
+                                    Step="10"
+                                    Width="64" 
+                                    Height="64">
+                                            <controls:KnobControl.SpriteSheet>
+                                                <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                    <helpers:SpriteSheet.Range>
+                                                        <controls:IntegerRange End="100" />
+                                                    </helpers:SpriteSheet.Range>
+                                                </helpers:SpriteSheet>
+                                            </controls:KnobControl.SpriteSheet>
+                                        </controls:KnobControl>
+
+                                        <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                               Foreground="White" FontWeight="Bold"
+                                               Content="detune" />
+
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                            <StackPanel>
+
+                                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                          Margin="0, 10, 0, 0"
+                                          materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryHueLightBrush}"
+                                          materialDesign:ColorZoneAssist.Mode="Dark"
+                                          materialDesign:HintAssist.Hint="interval"
+                                          ItemsSource="{Binding Osc1Octaves}" 
+                                          SelectedItem="{Binding Osc1Octave, Mode=TwoWay}"  
+                                          VerticalAlignment="Top" 
+                                          HorizontalAlignment="Left"
+                                          Width="110"
+                                          FontFamily="/Fonts/#Syncopate"
+                                          ToolTipService.ToolTip="Please select an interval.">
+                                </ComboBox>
+                                <Grid Margin="0, 10, 0, 0" VerticalAlignment="Bottom">
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Border Style="{StaticResource FadingBorderStyle}">
+                                        <Label Style="{StaticResource SynthLabelStyle}"
+                                               Content="{Binding Path=Osc1Mix}" />
+                                    </Border>
+                                    <StackPanel  Grid.Row="1">
+
+                                        <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Value="{Binding Path=Osc1Mix, Mode=TwoWay}" 
+                                    Margin="0,2,0,0" 
+                                    Maximum="100"
+                                    Minimum="0"
+                                    Step="10"
+                                    Width="64" 
+                                    Height="64">
+                                            <controls:KnobControl.SpriteSheet>
+                                                <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                    <helpers:SpriteSheet.Range>
+                                                        <controls:IntegerRange End="100" />
+                                                    </helpers:SpriteSheet.Range>
+                                                </helpers:SpriteSheet>
+                                            </controls:KnobControl.SpriteSheet>
+                                        </controls:KnobControl>
+
+                                        <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                           Foreground="White" FontWeight="Bold"
+                                           Content="mix" />
+
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Grid.Row="2" Header="OSC2" Style="{StaticResource FieldsetStyle}" VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal">
+
+                            <StackPanel>
+                                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                          Margin="0, 10, 20, 0"
+                                          materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryHueLightBrush}"
+                                          materialDesign:ColorZoneAssist.Mode="Dark"
+                                          materialDesign:HintAssist.Hint="waveform"
+                                          ItemsSource="{Binding Shapes}" 
+                                          SelectedItem="{Binding Osc2Waveform, Mode=TwoWay}"  
+                                          VerticalAlignment="Top" 
+                                          HorizontalAlignment="Left"
+                                          Width="110"
+                                          FontFamily="/Fonts/#Syncopate"
+                                          ToolTipService.ToolTip="Please select a waveform.">
+                                </ComboBox>
+
+                                <Grid Margin="0, 10, 0, 0" VerticalAlignment="Bottom">
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Border Style="{StaticResource FadingBorderStyle}">
+                                        <Label Style="{StaticResource SynthLabelStyle}"
+                                               Content="{Binding Path=Osc2Detune, Converter={StaticResource DefaultValueConverter}}" />
+                                    </Border>
+                                    <StackPanel Grid.Row="1">
+
+                                        <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Value="{Binding Path=Osc2Detune, Mode=TwoWay}" 
+                                    Margin="0,2,0,0" 
+                                    Maximum="1200"
+                                    Minimum="-1200"
+                                    Step="10"
+                                    Width="64" 
+                                    Height="64">
+                                            <controls:KnobControl.SpriteSheet>
+                                                <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                    <helpers:SpriteSheet.Range>
+                                                        <controls:IntegerRange End="100" />
+                                                    </helpers:SpriteSheet.Range>
+                                                </helpers:SpriteSheet>
+                                            </controls:KnobControl.SpriteSheet>
+                                        </controls:KnobControl>
+
+                                        <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                           Foreground="White" FontWeight="Bold"
+                                           Content="detune" />
+
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                              Margin="0, 10, 0, 0"
+                                              materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryHueLightBrush}"
+                                              materialDesign:ColorZoneAssist.Mode="Dark"
+                                              materialDesign:HintAssist.Hint="interval"
+                                              ItemsSource="{Binding Osc2Octaves}" 
+                                              SelectedItem="{Binding Osc2Octave, Mode=TwoWay}"  
+                                              VerticalAlignment="Top" 
+                                              HorizontalAlignment="Left"
+                                              Width="110"
+                                              FontFamily="/Fonts/#Syncopate"
+                                              ToolTipService.ToolTip="Please select an interval.">
+                                </ComboBox>
+                                <Grid Margin="0, 10, 0, 0" VerticalAlignment="Bottom">
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Border Style="{StaticResource FadingBorderStyle}">
+                                        <Label Style="{StaticResource SynthLabelStyle}"
+                                               Content="{Binding Path=Osc2Mix}" />
+                                    </Border>
+                                    <StackPanel Grid.Row="1">
+
+                                        <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Value="{Binding Path=Osc2Mix, Mode=TwoWay}" 
+                                    Margin="0,2,0,0" 
+                                    Maximum="100"
+                                    Minimum="0"
+                                    Step="10"
+                                    Width="64" 
+                                    Height="64">
+                                            <controls:KnobControl.SpriteSheet>
+                                                <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                    <helpers:SpriteSheet.Range>
+                                                        <controls:IntegerRange End="100" />
+                                                    </helpers:SpriteSheet.Range>
+                                                </helpers:SpriteSheet>
+                                            </controls:KnobControl.SpriteSheet>
+                                        </controls:KnobControl>
+
+                                        <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                           Foreground="White" FontWeight="Bold"
+                                           Content="mix" />
+
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
+                <GroupBox Grid.Column="2" Header="filter" Style="{StaticResource FieldsetStyle}" Margin="4, 0" Width="112">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Margin="0, 20, 0, 0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border 
+                                Style="{StaticResource FadingBorderStyle}" Width="Auto">
+                                <Label
+                                    Style="{StaticResource SynthLabelStyle}"
+                                    Content="{Binding Path=FilterCutoff, Converter={StaticResource FrequencyValueConverter}}" />
+                            </Border>
+
+                            <StackPanel Grid.Row="1">
+
+                                <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Value="{Binding Path=FilterCutoff, Mode=TwoWay}" 
+                                    Margin="0,2,0,0" 
+                                    Minimum="20"
+                                    Maximum="20000"
+                                    Logarithmic="True"
+                                    Step="20"
+                                    Width="64" 
+                                    Height="64">
+
+                                    <controls:KnobControl.SpriteSheet>
+                                        <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                            <helpers:SpriteSheet.Range>
+                                                <controls:IntegerRange End="100" />
+                                            </helpers:SpriteSheet.Range>
+                                        </helpers:SpriteSheet>
+                                    </controls:KnobControl.SpriteSheet>
+                                </controls:KnobControl>
+
+                                <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                               Foreground="White" FontWeight="Bold"
+                               Content="cutoff" />
+
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="1" Margin="0, 20, 0, 0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border 
+                            Style="{StaticResource FadingBorderStyle}">
+                                <Label Style="{StaticResource SynthLabelStyle}"
+                                       Content="{Binding Path=FilterQ}" />
+                            </Border>
+
+                            <StackPanel Grid.Row="1">
+
+                                <controls:KnobControl 
+                            VerticalAlignment="Top" 
+                            Value="{Binding Path=FilterQ, Mode=TwoWay}" 
+                            Margin="0,2,0,0" 
+                            Maximum="20"
+                            Minimum="0"
+                            Width="64" 
+                            Height="64">
+                                    <controls:KnobControl.SpriteSheet>
+                                        <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                            <helpers:SpriteSheet.Range>
+                                                <controls:IntegerRange End="100" />
+                                            </helpers:SpriteSheet.Range>
+                                        </helpers:SpriteSheet>
+                                    </controls:KnobControl.SpriteSheet>
+
+                                </controls:KnobControl>
+
+                                <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                               Foreground="White" FontWeight="Bold"
+                               Content="q" />
+
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="2" Margin="0, 20, 0, 0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border 
+                            Style="{StaticResource FadingBorderStyle}">
+                                <Label Style="{StaticResource SynthLabelStyle}"
+                                       Content="{Binding Path=FilterModulation}" />
+                            </Border>
+
+                            <StackPanel Grid.Row="1">
+
+                                <controls:KnobControl 
+                            VerticalAlignment="Top" 
+                            Value="{Binding Path=FilterModulation, Mode=TwoWay}" 
+                            Margin="0,2,0,0" 
+                            Maximum="100"
+                            Minimum="0"
+                            Step="10"
+                            Width="64" 
+                            Height="64">
+                                    <controls:KnobControl.SpriteSheet>
+                                        <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                            <helpers:SpriteSheet.Range>
+                                                <controls:IntegerRange End="100" />
+                                            </helpers:SpriteSheet.Range>
+                                        </helpers:SpriteSheet>
+                                    </controls:KnobControl.SpriteSheet>
+                                </controls:KnobControl>
+
+                                <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                               Foreground="White" FontWeight="Bold"
+                               Content="mod" />
+
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="3" Margin="0, 20, 0, 0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Border 
+                            Style="{StaticResource FadingBorderStyle}">
+                                <Label Style="{StaticResource SynthLabelStyle}"
+                                       Content="{Binding Path=FilterEnvelopeMix}" />
+                            </Border>
+
+
+                            <StackPanel Grid.Row="1">
+
+                                <controls:KnobControl 
+                            VerticalAlignment="Top" 
+                            Value="{Binding Path=FilterEnvelopeMix, Mode=TwoWay}" 
+                            Margin="0,2,0,0" 
+                            Maximum="100"
+                            Minimum="0"
+                            Step="10"
+                            Width="64" 
+                            Height="64">
+                                    <controls:KnobControl.SpriteSheet>
+                                        <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                            <helpers:SpriteSheet.Range>
+                                                <controls:IntegerRange End="100" />
+                                            </helpers:SpriteSheet.Range>
+                                        </helpers:SpriteSheet>
+                                    </controls:KnobControl.SpriteSheet>
+
+                                </controls:KnobControl>
+
+                                <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                               Foreground="White" FontWeight="Bold"
+                               Content="env" />
+
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <Grid Grid.Column="3" Margin="4, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Header="filter envelope" Style="{StaticResource FieldsetStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="90"/>
+
+
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Margin="0, 20, 0, 0" VerticalAlignment="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border 
+                                Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=FilterEnvelopeAttack}" />
+                                </Border>
+
+                                <StackPanel Grid.Row="1">
+                                    <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Value="{Binding Path=FilterEnvelopeAttack, Mode=TwoWay}" 
+                                    Margin="0,2,0,0" 
+                                    Maximum="100"
+                                    Minimum="0"
+                                    Step="10"
+                                    Width="64" 
+                                    Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                       Foreground="White" FontWeight="Bold"
+                                       Content="attack" />
+
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Column="1" Margin="0, 20, 0, 0" VerticalAlignment="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border 
+                                Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=FilterEnvelopeDecay}" />
+                                </Border>
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl                                     
+                                Maximum="100"
+                                Minimum="0"
+                                Step="10"
+                                VerticalAlignment="Top" 
+                                Value="{Binding Path=FilterEnvelopeDecay, Mode=TwoWay}" 
+                                Margin="0,2,0,0" 
+                                Width="64" Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                   Foreground="White" FontWeight="Bold"
+                                   Content="decay" />
+
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Column="2" Margin="0, 20, 0, 0" VerticalAlignment="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border 
+                                Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=FilterEnvelopeSustain}" />
+                                </Border>
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl                                     
+                                Maximum="100"
+                                Minimum="0"
+                                Step="10"
+                                VerticalAlignment="Top" Value="{Binding Path=FilterEnvelopeSustain, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                   Foreground="White" FontWeight="Bold"
+                                   Content="sustain" />
+
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Column="3" Margin="0, 20, 0, 0" VerticalAlignment="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border 
+                                Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=FilterEnvelopeRelease}" />
+                                </Border>
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Value="{Binding Path=FilterEnvelopeRelease, Mode=TwoWay}" 
+                                    Maximum="100"
+                                    Minimum="0"
+                                    Step="10"
+                                    Margin="0,2,0,0" 
+                                    Width="64" Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                       Foreground="White" FontWeight="Bold"
+                                       Content="release" />
+
+                                </StackPanel>
+                            </Grid>
+
+                        </Grid>
+
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Header="volume envelope" Style="{StaticResource FieldsetStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="90"/>
+
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Margin="0, 20, 0, 0" VerticalAlignment="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border 
+                                Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=VolumeEnvelopeAttack}" />
+                                </Border>
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Value="{Binding Path=VolumeEnvelopeAttack, Mode=TwoWay}" 
+                                    Maximum="100"
+                                    Minimum="0"
+                                    Step="10"
+                                    Margin="0,2,0,0" 
+                                    Width="64" Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                       Foreground="White" FontWeight="Bold"
+                                       Content="attack" />
+
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Column="1" Margin="0, 20, 0, 0" VerticalAlignment="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border 
+                                Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=VolumeEnvelopeDecay}" />
+                                </Border>
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl 
+                                VerticalAlignment="Top" 
+                                Value="{Binding Path=VolumeEnvelopeDecay, Mode=TwoWay}" 
+                                Margin="0,2,0,0" 
+                                Width="64" Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                   Foreground="White" FontWeight="Bold"
+                                   Content="decay" />
+
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Grid.Column="2" Margin="0, 20, 0, 0" VerticalAlignment="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border 
+                                Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=VolumeEnvelopeSustain}" />
+                                </Border>
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl VerticalAlignment="Top" Value="{Binding Path=VolumeEnvelopeSustain, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                       Foreground="White" FontWeight="Bold"
+                                       Content="sustain" />
+
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Column="3" Margin="0, 20, 0, 0" VerticalAlignment="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border 
+                                Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=VolumeEnvelopeRelease}" />
+                                </Border>
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl VerticalAlignment="Top" Value="{Binding Path=VolumeEnvelopeRelease, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                       Foreground="White" FontWeight="Bold"
+                                       Content="release" />
+
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="2" Header="master" Style="{StaticResource FieldsetStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="90"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Margin="0, 10, 0, 0" VerticalAlignment="Bottom">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=Drive}" />
+                                </Border>
+
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl VerticalAlignment="Top" Value="{Binding Path=Drive, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                   Foreground="White" FontWeight="Bold"
+                                   Content="drive" />
+
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Column="1" Margin="0, 10, 0, 0" VerticalAlignment="Bottom">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border 
+                                Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=Reverb}" />
+                                </Border>
+
+
+                                <StackPanel Grid.Row="1">
+                                    <controls:KnobControl VerticalAlignment="Top" Value="{Binding Path=Reverb, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                       Foreground="White" FontWeight="Bold"
+                                       Content="reverb" />
+
+                                </StackPanel>
+
+                            </Grid>
+                            <Grid Grid.Column="2" Margin="0, 10, 0, 0" VerticalAlignment="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Border 
+                                Style="{StaticResource FadingBorderStyle}">
+                                    <Label Style="{StaticResource SynthLabelStyle}"
+                                           Content="{Binding Path=MasterVolume}" />
+                                </Border>
+
+                                <StackPanel Grid.Row="1">
+
+                                    <controls:KnobControl 
+                                    VerticalAlignment="Top" 
+                                    Value="{Binding Path=MasterVolume, Mode=TwoWay}" 
+                                    Margin="0,2,0,0" 
+                                    Step="10"
+                                    Width="64" 
+                                    Height="64">
+                                        <controls:KnobControl.SpriteSheet>
+                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helpers:SpriteSheet.Range>
+                                                    <controls:IntegerRange End="100" />
+                                                </helpers:SpriteSheet.Range>
+                                            </helpers:SpriteSheet>
+                                        </controls:KnobControl.SpriteSheet>
+                                    </controls:KnobControl>
+
+                                    <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
+                                   Foreground="White" FontWeight="Bold"
+                                   Content="volume" />
+
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel Grid.Column="3" Margin="0, 20, 0, 0">
+
+                                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      Margin="0, 10, 0, 0"
+                                      materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryHueLightBrush}"
+                                      materialDesign:ColorZoneAssist.Mode="Dark"
+                                      materialDesign:HintAssist.Hint="midi_in"
+                                      ItemsSource="{Binding MidiDevices}" 
+                                      SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"  
+                                      VerticalAlignment="Top" 
+                                      HorizontalAlignment="Left"
+                                      FontFamily="/Fonts/#Syncopate"
+                                      ToolTipService.ToolTip="Please select a waveform.">
+                                </ComboBox>
+
+                                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                      Margin="0, 10, 0, 0"
+                                      materialDesign:TextFieldAssist.UnderlineBrush="{DynamicResource SecondaryHueLightBrush}"
+                                      materialDesign:ColorZoneAssist.Mode="Dark"
+                                      materialDesign:HintAssist.Hint="kbd_oct"
+                                      ItemsSource="{Binding KeyboardOctaves}" 
+                                      SelectedItem="{Binding KeyboardOctave, Mode=TwoWay}"  
+                                      VerticalAlignment="Top" 
+                                      HorizontalAlignment="Left"
+                                      FontFamily="/Fonts/#Syncopate"
+                                      ToolTipService.ToolTip="Please select a waveform.">
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </Grid>
+        </Border>
+        <Grid Grid.Row="1">
+            <ItemsControl ItemsSource="{Binding Keys}"  HorizontalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Canvas.Left">
+                            <Setter.Value>
+                                <MultiBinding Converter="{StaticResource NoteToCanvasLocationConverter}">
+                                    <Binding Path="NoteAndOctave" />
+                                    <Binding Path="DataContext.TotalKeysWidth" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                    <Binding Path="ActualWidth" RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
+                                    <Binding Path="HorizontalAlignment" RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Canvas.ZIndex" Value="{Binding NoteAndOctave, Converter={StaticResource NoteToZIndexConverter}}" />
+                        <Setter Property="Control.Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsBlackKey}" Value="True">
+                                <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource BlackKeyTemplate}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsBlackKey}" Value="False">
+                                <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource WhiteKeyTemplate}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+        </Grid>
+    </Grid>
+</UserControl>
