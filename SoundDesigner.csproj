@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Assets\AudioJack.png" />
     <None Remove="Assets\background-texture.png" />
     <None Remove="Assets\home-page.png" />
     <None Remove="Assets\img_about.png" />
@@ -39,6 +40,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Assets\AudioJack.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\background-texture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

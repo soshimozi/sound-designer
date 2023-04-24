@@ -5,22 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:SoundDesigner.Controls"
         mc:Ignorable="d"
+        Background="{StaticResource BackgroundBrush}"
         Title="MainWindow" Height="510" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
         <!--<Canvas>
             <controls:MainPanel Width="Auto" Height="Auto">
             </controls:MainPanel>
         </Canvas>-->
 
         <controls:AudioJack Grid.Row="0" ToY="0" HorizontalAlignment="Left"/>
-
-        <Canvas Grid.Row="1" HorizontalAlignment="Left">
-            <controls:AudioJack Grid.Row="0" ToY="0" Padding="0" Margin="0" Height="20" Width="20" />
-        </Canvas>
+        <controls:AudioJack Grid.Row="1" ToY="0" HorizontalAlignment="Left" />
         
     </Grid>
 </Window>
