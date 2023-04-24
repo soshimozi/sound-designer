@@ -42,57 +42,26 @@ public class ControlPanel : System.Windows.Controls.Control
 
     private void ControlPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        _isDragging = false;
-        if (_draggingFrom == null || PanelCanvas == null || _draggingCable == null) return;
-
-        // we are done with this cable for now
-        PanelCanvas.Children.Remove(_draggingCable);
-        ReleaseMouseCapture();
-
-        //var result = VisualTreeHelper.HitTest(PanelCanvas, e.GetPosition(PanelCanvas));
-        //if (result is not { VisualHit: AudioJack control }) return;
-
-        //if (result is not { VisualHit: FrameworkElement child }) return;
-
-
-        //var control = child is not AudioJack jack ? child.FindAncestor<AudioJack>() : jack;
-
-
         var from = _draggingFrom;
+        var cable = _draggingCable;
 
+        _isDragging = false;
         _draggingFrom = null;
         _draggingCable = null;
 
+        ReleaseMouseCapture();
+
+        if (from == null || PanelCanvas == null || cable == null) return;
+
+        // we are done with this cable for now
+        PanelCanvas.Children.Remove(cable);
+
         var audioJack = FindAudioJackFromHitPoint(e.GetPosition(PanelCanvas), PanelCanvas);
-
-        if (audioJack == null) return;
-        if (audioJack == from) return;
-
+        if (audioJack == null || audioJack == from) return;
         if (audioJack.ToY != from.ToY)
         {
             Connect(from, audioJack);
         }
-
-    }
-
-    private static AudioJack? FindAudioJackFromHitPoint(Point hitPoint, Canvas canvas)
-    {
-        var hitResults = new List<HitTestResult>();
-        VisualTreeHelper.HitTest(canvas, null, result =>
-        {
-            hitResults.Add(result);
-            return HitTestResultBehavior.Continue;
-        }, new PointHitTestParameters(hitPoint));
-
-        var audioJack = hitResults.Select(result => result.VisualHit)
-            .OfType<AudioJack>().FirstOrDefault();
-
-        if (audioJack != null) return audioJack;
-
-        var image = hitResults.Select(result => result.VisualHit)
-            .OfType<Image>().FirstOrDefault();
-
-        return image?.FindAncestor<AudioJack>();
     }
 
     private void ControlPanel_MouseMove(object sender, MouseEventArgs e)
@@ -358,6 +327,26 @@ public class ControlPanel : System.Windows.Controls.Control
         }
 
         PanelCanvas?.Children.Add(textBlock);
+    }
+
+    private static AudioJack? FindAudioJackFromHitPoint(Point hitPoint, Canvas canvas)
+    {
+        var hitResults = new List<HitTestResult>();
+        VisualTreeHelper.HitTest(canvas, null, result =>
+        {
+            hitResults.Add(result);
+            return HitTestResultBehavior.Continue;
+        }, new PointHitTestParameters(hitPoint));
+
+        var audioJack = hitResults.Select(result => result.VisualHit)
+            .OfType<AudioJack>().FirstOrDefault();
+
+        if (audioJack != null) return audioJack;
+
+        var image = hitResults.Select(result => result.VisualHit)
+            .OfType<Image>().FirstOrDefault();
+
+        return image?.FindAncestor<AudioJack>();
     }
 
 }

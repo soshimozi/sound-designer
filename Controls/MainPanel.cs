@@ -20,8 +20,6 @@ public class MainPanel : ControlPanel
     {
         base.OnApplyTemplate();
 
-            
-
         if (FindResource("BackgroundBrush") is ImageBrush brush)
         {
             DrawRoundedRectangle(10, 10, 760, 450, 10, brush, new SolidColorBrush(Colors.White));

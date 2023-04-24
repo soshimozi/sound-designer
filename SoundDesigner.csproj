@@ -18,6 +18,7 @@
     <None Remove="Assets\background-texture.png" />
     <None Remove="Assets\home-page.png" />
     <None Remove="Assets\img_about.png" />
+    <None Remove="Assets\img_electronic.png" />
     <None Remove="Assets\img_exit.png" />
     <None Remove="Assets\img_home.png" />
     <None Remove="Assets\img_music.png" />
@@ -55,6 +56,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\img_about.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\img_electronic.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\img_exit.png">
@@ -128,9 +132,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\img_artist.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\img_electronic.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\img_folder.png">

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SoundDesigner"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             StartupUri="MainWindowControlTest.xaml">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
 
         <ResourceDictionary>
@@ -23,8 +23,8 @@
                 <ResourceDictionary Source="Styles/Slider.xaml" />
                 <ResourceDictionary Source="Styles/Knob.xaml" />
                 <ResourceDictionary Source="DataTemplate.xaml" />
-
-                <ResourceDictionary Source="ControlStyles.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Styles/ControlPanel.xaml" />
+                <ResourceDictionary Source="ControlStyles.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
 

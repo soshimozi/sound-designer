@@ -81,6 +81,21 @@
                     </lib:NavigationButton>
 
                     <!--// Products //-->
+                    <lib:NavigationButton Style="{StaticResource BtnStyle}"
+                                          Command="{Binding ControlTestCommand}">
+
+                        <Grid>
+
+                            <Image Source="Assets/AudioJack.png"
+                                   Style="{StaticResource Image_Style}" />
+
+                            <TextBlock Text="Control Test"
+                                       Style="{StaticResource Text_Style}" />
+
+                        </Grid>
+
+                    </lib:NavigationButton>
+
 
                     <lib:NavigationButton Style="{StaticResource BtnStyle}"
                               Command="{Binding SettingsCommand}">
