@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <None Remove="Assets\AudioJack.png" />
+    <None Remove="Assets\AudioJackImage.png" />
     <None Remove="Assets\background-texture.png" />
     <None Remove="Assets\home-page.png" />
     <None Remove="Assets\img_about.png" />
@@ -22,6 +23,7 @@
     <None Remove="Assets\img_music.png" />
     <None Remove="Assets\img_setting.png" />
     <None Remove="Assets\jack.png" />
+    <None Remove="Assets\jack2.png" />
     <None Remove="Assets\LittlePhatty.png" />
     <None Remove="Assets\PC3_EnvFader_01_Orange.png" />
     <None Remove="Assets\Possible_SVG_Jack.png" />
@@ -41,6 +43,9 @@
 
   <ItemGroup>
     <Content Include="Assets\AudioJack.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\AudioJackImage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\background-texture.png">
@@ -65,6 +70,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\jack.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\jack2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\LittlePhatty.png">

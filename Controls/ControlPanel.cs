@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -48,96 +49,95 @@ public class ControlPanel : System.Windows.Controls.Control
         PanelCanvas.Children.Remove(_draggingCable);
         ReleaseMouseCapture();
 
-        var result = VisualTreeHelper.HitTest(PanelCanvas, e.GetPosition(PanelCanvas));
-        if (result is not { VisualHit: AudioJack control }) return;
+        //var result = VisualTreeHelper.HitTest(PanelCanvas, e.GetPosition(PanelCanvas));
+        //if (result is not { VisualHit: AudioJack control }) return;
 
-        if (control != _draggingFrom)
-        {
-            if (_draggingFrom.ToY == 0 && control.ToY != 0)
-            {
-                Connect(control.Name, _draggingFrom.Name);
-            }
-            else if (_draggingFrom.ToY != 0 && control.ToY == 0)
-            {
-                Connect(_draggingFrom.Name, control.Name);
-            }
+        //if (result is not { VisualHit: FrameworkElement child }) return;
 
-        }
+
+        //var control = child is not AudioJack jack ? child.FindAncestor<AudioJack>() : jack;
+
+
+        var from = _draggingFrom;
 
         _draggingFrom = null;
         _draggingCable = null;
 
+        var audioJack = FindAudioJackFromHitPoint(e.GetPosition(PanelCanvas), PanelCanvas);
+
+        if (audioJack == null) return;
+        if (audioJack == from) return;
+
+        if (audioJack.ToY != from.ToY)
+        {
+            Connect(from, audioJack);
+        }
+
+    }
+
+    private static AudioJack? FindAudioJackFromHitPoint(Point hitPoint, Canvas canvas)
+    {
+        var hitResults = new List<HitTestResult>();
+        VisualTreeHelper.HitTest(canvas, null, result =>
+        {
+            hitResults.Add(result);
+            return HitTestResultBehavior.Continue;
+        }, new PointHitTestParameters(hitPoint));
+
+        var audioJack = hitResults.Select(result => result.VisualHit)
+            .OfType<AudioJack>().FirstOrDefault();
+
+        if (audioJack != null) return audioJack;
+
+        var image = hitResults.Select(result => result.VisualHit)
+            .OfType<Image>().FirstOrDefault();
+
+        return image?.FindAncestor<AudioJack>();
     }
 
     private void ControlPanel_MouseMove(object sender, MouseEventArgs e)
     {
+
         if (!_isDragging || PanelCanvas == null || _draggingCable == null || _draggingFrom == null) return;
 
-
-        var result = VisualTreeHelper.HitTest(PanelCanvas, e.GetPosition(PanelCanvas));
-
-        // ignore cable hits
-        if (result is { VisualHit: Cable cable }) return;
-
-        // Update the position of the dragged control
-        //_draggingCable.DraggableState = Cable.DraggableStateEnum.DraggingCanDrop;
-        if (result is not { VisualHit: AudioJack control })
-        {
-            _draggingCable.DraggableState = Cable.DraggableStateEnum.DraggingNoDrop;
-        }
-        else
-        {
-            // can't drop on itself
-            if (control == _draggingFrom) _draggingCable.DraggableState = Cable.DraggableStateEnum.DraggingNoDrop;
-            else
-            {
-                // now we need to check input vs output
-                if (_draggingFrom.ToY == 0 && control.ToY != 0)
-                {
-                    _draggingCable.DraggableState = Cable.DraggableStateEnum.DraggingCanDrop;
-                } else if (_draggingFrom.ToY != 0 && control.ToY == 0)
-                {
-                    _draggingCable.DraggableState = Cable.DraggableStateEnum.DraggingCanDrop;
-                }
-                else
-                {
-                    _draggingCable.DraggableState = Cable.DraggableStateEnum.DraggingNoDrop;
-                }
-            }
-
-        }
-
         _draggingCable.EndPoint = e.GetPosition(this);
+        _draggingCable.DraggableState = Cable.DraggableStateEnum.DraggingNoDrop;
+
+        var audioJack = FindAudioJackFromHitPoint(e.GetPosition(PanelCanvas), PanelCanvas);
+        if (audioJack == null) return;
+
+        // can only drop inputs on outputs and vice versa
+        if (audioJack.ToY != _draggingFrom.ToY)
+        {
+            _draggingCable.DraggableState = Cable.DraggableStateEnum.DraggingCanDrop;
+        }
+
     }
 
     private void ControlPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (PanelCanvas == null) return;
 
-        // Perform hit testing to see if the mouse is over a control that can be dragged
-        var result = VisualTreeHelper.HitTest(PanelCanvas, e.GetPosition(PanelCanvas));
-        if (result is not { VisualHit: AudioJack control }) return;
+        var audioJack = FindAudioJackFromHitPoint(e.GetPosition(PanelCanvas), PanelCanvas);
+        if(audioJack == null) return;
 
         // Start dragging the control
         _isDragging = true;
-        _draggingFrom = control;
+        _draggingFrom = audioJack;
 
-        //offset = e.GetPosition(this);
-
-        offset = new Point(_draggingFrom.X, _draggingFrom.Y);
+        offset = new Point(audioJack.X,audioJack.Y);
 
         _draggingCable = new Cable(offset, offset, Color.FromRgb(128,128,128));
         PanelCanvas.Children.Add(_draggingCable);
 
-
         if (_draggingFrom.ConnectedFrom != null)
         {
+            // if we are an input jack, remove the current cable
             PanelCanvas.Children.Remove(_draggingFrom.ConnectedFrom);
             _draggingFrom.ConnectedFrom = null;
         }
 
         CaptureMouse();
-
         ControlPanel_MouseMove(sender, e);
     }
 
@@ -179,17 +179,21 @@ public class ControlPanel : System.Windows.Controls.Control
         PanelCanvas?.Children.Add(polygon);
     }
 
-    //public AudioJack AddJack(string name, int x, int y, int toy, Color? cableColor = null)
-    //{
-    //    var jack = new AudioJack(name, toy, "Assets/Possible_SVG_Jack.png", cableColor);
+    public AudioJack AddJack(string name, int x, int y, int toy, Color? cableColor = null)
+    {
+        var jack = new AudioJack();
+        
+        jack.Name = name;
+        jack.ToY = toy;
+        //jack.CableColor = cableColor ?? Colors.White;
+       
+        Canvas.SetLeft(jack, x);
+        Canvas.SetTop(jack, y);
 
-    //    Canvas.SetLeft(jack, x);
-    //    Canvas.SetTop(jack, y);
-
-    //    PanelCanvas?.Children.Add(jack);
-    //    _controls[name] = jack;
-    //    return jack;
-    //}
+        PanelCanvas?.Children.Add(jack);
+        _controls[name] = jack;
+        return jack;
+    }
 
     public SliderControl AddSlider(string name, int x, int y, int width, int height,
         string imageSource, int steps, double defaultValue)
@@ -253,20 +257,16 @@ public class ControlPanel : System.Windows.Controls.Control
         return null;
     }
 
-    public void Connect(string from, string to)
+    public void Connect(AudioJack jackFrom, AudioJack jackTo)
     {
-        var jackFrom = _controls.GetValueOrDefault(from) as AudioJack;
-        var jackTo = _controls.GetValueOrDefault(to) as AudioJack;
-        if (jackFrom == null || jackTo == null) return;
-
-
         if (jackFrom.ToY == 0)
         {
             if (jackFrom.ConnectedFrom != null)
             {
                 PanelCanvas?.Children.Remove(jackFrom.ConnectedFrom);
             }
-        } else if (jackTo.ToY == 0)
+        }
+        else if (jackTo.ToY == 0)
         {
             if (jackTo.ConnectedFrom != null)
             {
@@ -276,6 +276,16 @@ public class ControlPanel : System.Windows.Controls.Control
 
         var cable = jackFrom.Connect(jackTo);
         PanelCanvas?.Children.Add(cable);
+    }
+
+    public void Connect(string from, string to)
+    {
+        var jackFrom = _controls.GetValueOrDefault(from) as AudioJack;
+        var jackTo = _controls.GetValueOrDefault(to) as AudioJack;
+        if (jackFrom == null || jackTo == null) return;
+
+        Connect(jackFrom, jackTo);
+
     }
 
     public void Disconnect(string from, string to)

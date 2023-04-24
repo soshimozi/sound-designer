@@ -3,26 +3,43 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:SoundDesigner.Controls"
+        xmlns:controls="clr-namespace:SoundDesigner.Controls" xmlns:sounddesigner="clr-namespace:SoundDesigner"
         mc:Ignorable="d"
         Background="{StaticResource BackgroundBrush}"
         Title="MainWindow" Height="510" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
         <!--<Canvas>
             <controls:MainPanel Width="Auto" Height="Auto">
             </controls:MainPanel>
         </Canvas>-->
 
-        <controls:AudioJack Grid.Row="0" ToY="0" HorizontalAlignment="Left"/>
-        <controls:AudioJack Grid.Row="1" ToY="0" HorizontalAlignment="Left" />
-        
+        <!--<controls:MainPanel Grid.Row="0" HorizontalAlignment="Left"/>-->
+
+        <ItemsControl ItemsSource="{Binding Jacks}"  HorizontalAlignment="Left">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <controls:AudioJack></controls:AudioJack>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemContainerStyle>
+                <Style>
+                    <Setter Property="Canvas.Left" Value="{Binding  X}">
+                    </Setter>
+                    <Setter Property="Canvas.Top" Value="{Binding  Y}">
+                    </Setter>
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+        <controls:MainPanel Grid.Row="1"></controls:MainPanel>
     </Grid>
+
 </Window>

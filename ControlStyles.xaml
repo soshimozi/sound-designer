@@ -43,7 +43,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:AudioJack}">
                     <Grid Background="Transparent">
-                        <Image Source="Assets/AudioJack.png" Stretch="None"></Image>
+                        <Image Source="Assets/jack.png" Stretch="None" Margin="-9, -9, 0, 0"></Image>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -9,13 +9,13 @@ using Point = System.Windows.Point;
 
 namespace SoundDesigner.Controls;
 
-public class AudioJack : System.Windows.Controls.Control
+public class AudioJack : UserControl
 {
     //public Color Color { get; set; }
 
     public Cable? ConnectedFrom { get; set; }
     public List<Cable> ConnectedTo { get; set; }
-    public int ToY { get; set; }
+    //public int ToY { get; set; }
 
     private BitmapImage? _image;
     private static int[] colorValues = new[]
@@ -46,18 +46,31 @@ public class AudioJack : System.Windows.Controls.Control
     public static readonly DependencyProperty CableColorProperty =
         DependencyProperty.Register("CableColor", typeof(Color), typeof(AudioJack), new PropertyMetadata(Color.FromRgb(128, 128, 128)));
 
-    public int JackType
+    public int ToY
     {
-        get => (int)GetValue(JackTypeProperty);
-        set => SetValue(JackTypeProperty, value);
+        get => (int)GetValue(ToYProperty);
+        set => SetValue(ToYProperty, value);
     }
 
-    public static readonly DependencyProperty JackTypeProperty =
-        DependencyProperty.Register("JackType", typeof(int), typeof(AudioJack), new PropertyMetadata(0));
+    public static readonly DependencyProperty ToYProperty =
+        DependencyProperty.Register("ToY", typeof(int), typeof(AudioJack), new PropertyMetadata(1, OnToYChanged));
+
+    private static void OnToYChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not AudioJack jack) return;
+
+        if (jack.ToY == 0)
+        {
+            // get a new color
+            jack.CableColor = colors[_col++ % colors.Length];
+        }
+    }
+
 
     public AudioJack()
     {
-        CableColor = colors[(_col++ % colors.Length)];
+        //CableColor = colors[(_col++ % colors.Length)];
+        ConnectedTo = new List<Cable>();
     }
 
     //public AudioJack(string name, int toY, string imagePath, Color? color = null)
@@ -113,8 +126,8 @@ public class AudioJack : System.Windows.Controls.Control
 
     public Cable Connect(AudioJack other)
     {
-        var startPoint = Center;
-        var endPoint = new Point(other.X - X + other.ActualWidth / 2, other.Y - Y + other.ActualHeight / 2);
+        var startPoint = new Point(X, Y);
+        var endPoint = new Point(other.X, other.Y);
 
         if (ToY == 0)
         {
@@ -129,7 +142,7 @@ public class AudioJack : System.Windows.Controls.Control
         }
         else
         {
-            var cable = CreateCable(startPoint, endPoint, other.CableColor);
+            var cable = new Cable(startPoint, endPoint, other.CableColor);
 
             ConnectedTo.Add(cable);
             other.ConnectedFrom = cable;
@@ -141,13 +154,11 @@ public class AudioJack : System.Windows.Controls.Control
     {
         var cable = new Cable(startPoint, endPoint, color);
 
-        Canvas.SetLeft(cable, X);
-        Canvas.SetTop(cable, Y);
+        //Canvas.SetLeft(cable, X);
+        //Canvas.SetTop(cable, Y);
 
         return cable;
     }
-
-    private Point Center => new Point(ActualWidth / 2, ActualHeight / 2);
 
     public double X => Canvas.GetLeft(this);
     public double Y => Canvas.GetTop(this);

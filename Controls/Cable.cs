@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -14,12 +15,12 @@ namespace SoundDesigner.Controls
             DraggingNoDrop,
         }
 
-        private Point? _start;
+        //private Point? _start;
         private Color _color;
 
         public Cable(Point? start, Point? end, Color color)
         {
-            _start = start;
+            StartPoint = start;
             EndPoint = end;
             _color = color;
         }
@@ -35,9 +36,9 @@ namespace SoundDesigner.Controls
 
         private static void OnDraggableStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Cable cable)
+            if (d is FrameworkElement fe)
             {
-                cable.InvalidateVisual(); // Redraw the cable when the value changes
+                fe.InvalidateVisual(); // Redraw the cable when the value changes
             }
         }
 
@@ -50,19 +51,30 @@ namespace SoundDesigner.Controls
         public static readonly DependencyProperty EndPointProperty = DependencyProperty.Register(
             "EndPoint", typeof(Point?), typeof(Cable), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
+        public Point? StartPoint
+        {
+            get => (Point?)GetValue(StartPointProperty);
+            set => SetValue(StartPointProperty, value);
+        }
+
+        public static readonly DependencyProperty StartPointProperty = DependencyProperty.Register(
+            "StartPoint", typeof(Point?), typeof(Cable), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
 
             var color = _color;
-            var startPoint = _start ?? new Point();
+            var startPoint = StartPoint ?? new Point();
             var endPoint = EndPoint ?? new Point();
 
             int r = color.R;
             int g = color.G;
             int b = color.B;
 
-            for (int i = 4; i > 0; --i)
+            const int cableThickness = 5;
+
+            for (var i = cableThickness; i > 0; --i)
             {
                 var adjustedColor = Color.FromArgb(255, (byte)r, (byte)g, (byte)b);
 
@@ -105,19 +117,41 @@ namespace SoundDesigner.Controls
             {
                 case DraggableStateEnum.DraggingCanDrop:
                     // Draw green O
-                    var pen = new Pen(Brushes.Green, 2);
-                    drawingContext.DrawEllipse(null, pen, new Point(endPoint.X, endPoint.Y), 10, 10);
+                    DrawDragSuccess(endPoint, drawingContext);
+
+                    //var pen = new Pen(Brushes.Green, 2);
+                    //drawingContext.DrawEllipse(null, pen, new Point(endPoint.X, endPoint.Y), 10, 10);
                     break;
                 case DraggableStateEnum.DraggingNoDrop:
-                    // Draw red X
-                    var pen2 = new Pen(Brushes.Red, 2);
-                    drawingContext.DrawLine(pen2, new Point(endPoint.X - 10, endPoint.Y - 10), new Point(endPoint.X + 10, endPoint.Y + 10));
-                    drawingContext.DrawLine(pen2, new Point(endPoint.X + 10, endPoint.Y - 10), new Point(endPoint.X - 10, endPoint.Y + 10));
+                    DrawDragNoSuccess(endPoint, drawingContext);
+                    //// Draw red X
+                    //var pen2 = new Pen(Brushes.Red, 2);
+                    //drawingContext.DrawLine(pen2, new Point(endPoint.X - 10, endPoint.Y - 10), new Point(endPoint.X + 10, endPoint.Y + 10));
+                    //drawingContext.DrawLine(pen2, new Point(endPoint.X + 10, endPoint.Y - 10), new Point(endPoint.X - 10, endPoint.Y + 10));
+                    break;
+                case DraggableStateEnum.NoDrag:
                     break;
                 default:
-                    // NoDrag, do nothing
-                    break;
+                    throw new ArgumentOutOfRangeException();
             }
         }
+
+        private void DrawDragSuccess(Point endPoint, DrawingContext drawingContext)
+        {
+            var pen = new Pen(Brushes.Green, 2);
+            drawingContext.DrawEllipse(null, pen, new Point(endPoint.X, endPoint.Y), 10, 10);
+        }
+
+        private void DrawDragNoSuccess(Point endPoint, DrawingContext drawingContext)
+        {
+            var pen = new Pen(Brushes.Red, 2);
+            drawingContext.DrawEllipse(null, pen, new Point(endPoint.X, endPoint.Y), 10, 10);
+
+            //var pen2 = new Pen(Brushes.Red, 2);
+            drawingContext.DrawLine(pen, new Point(endPoint.X - 10, endPoint.Y - 10), new Point(endPoint.X + 10, endPoint.Y + 10));
+            drawingContext.DrawLine(pen, new Point(endPoint.X + 10, endPoint.Y - 10), new Point(endPoint.X - 10, endPoint.Y + 10));
+
+        }
+
     }
 }
