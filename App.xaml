@@ -24,7 +24,7 @@
                 <ResourceDictionary Source="Styles/Knob.xaml" />
                 <ResourceDictionary Source="DataTemplate.xaml" />
                 <ResourceDictionary Source="Styles/ControlPanel.xaml" />
-                <ResourceDictionary Source="ControlStyles.xaml" />
+                <ResourceDictionary Source="Styles/AudioJack.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
 

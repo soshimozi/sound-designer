@@ -9,7 +9,7 @@ using JackTest.Controls;
 
 namespace SoundDesigner.Controls;
 
-public class ControlPanel : System.Windows.Controls.Control
+public class ControlPanel : UserControl
 {
     static ControlPanel()
     {
@@ -37,7 +37,7 @@ public class ControlPanel : System.Windows.Controls.Control
         base.OnApplyTemplate();
 
         PanelCanvas = (Canvas)Template.FindName("PART_PanelCanvas", this);
-        PanelCanvas.Background = new SolidColorBrush(Color.FromRgb(56, 56, 56));
+        //PanelCanvas.Background = new SolidColorBrush(Color.FromRgb(56, 56, 56));
     }
 
     private void ControlPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)

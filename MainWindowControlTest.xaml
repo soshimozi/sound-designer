@@ -42,7 +42,39 @@
             <controls:ControlPanel x:Name="ControlPanel" />
         </Border>-->
 
-        <controls:MainPanel></controls:MainPanel>
+        <!--<controls:MainPanel></controls:MainPanel>-->
+
+        <Border Background="{StaticResource PanelBrush}" BorderBrush="White" BorderThickness="2" CornerRadius="5" Height="500" Width="600">
+
+            <!--<controls:ControlPanel x:Name="MainPanel"></controls:ControlPanel>-->
+
+            <!--<Canvas>
+                <controls:AudioJack ToY="0" Canvas.Left="50" Canvas.Top="50"></controls:AudioJack>
+            <controls:AudioJack ToY="1" Canvas.Left="100" Canvas.Top="100"></controls:AudioJack>
+                </Canvas>-->
+            
+            <ItemsControl ItemsSource="{Binding Jacks}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <controls:AudioJack></controls:AudioJack>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Canvas.Left" Value="{Binding  X}">
+                        </Setter>
+                        <Setter Property="Canvas.Top" Value="{Binding  Y}">
+                        </Setter>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+
+        </Border>
     </Grid>
 
 </UserControl>

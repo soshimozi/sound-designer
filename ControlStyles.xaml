@@ -28,7 +28,7 @@
     </DrawingBrush>
 
 
-    <Style TargetType="{x:Type controls:RectangleControl}">
+    <!--<Style TargetType="{x:Type controls:RectangleControl}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:RectangleControl}">
@@ -36,14 +36,14 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
     <Style TargetType="{x:Type controls:AudioJack}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:AudioJack}">
                     <Grid Background="Transparent">
-                        <Image Source="Assets/jack.png" Stretch="None" Margin="-9, -9, 0, 0"></Image>
+                        <Image Source="Assets/jack.png" Stretch="None" Margin="0, 0, 0, 0"></Image>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -60,14 +60,14 @@
         </Setter>
     </Style>-->
 
-    <Style TargetType="{x:Type controls:MainPanel}" BasedOn="{StaticResource {x:Type controls:ControlPanel}}">
+    <!--<Style TargetType="{x:Type controls:MainPanel}" BasedOn="{StaticResource {x:Type controls:ControlPanel}}">
         <Style.Resources>
             <ImageBrush x:Key="BackgroundBrush" ImageSource="Assets/background-texture.png"/>
         </Style.Resources>
 
          <Setter Property="Width" Value="800" />
         <Setter Property="Height" Value="600" />
-    </Style>
+    </Style>-->
 
     <!--<Style TargetType="{x:Type controls:Cable}">
         <Setter Property="Template">
