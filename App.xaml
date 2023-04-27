@@ -25,6 +25,7 @@
                 <ResourceDictionary Source="DataTemplate.xaml" />
                 <ResourceDictionary Source="Styles/ControlPanel.xaml" />
                 <ResourceDictionary Source="Styles/AudioJack.xaml" />
+                <ResourceDictionary Source="ControlStyles.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
 

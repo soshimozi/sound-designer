@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml.Linq;
 using SoundDesigner.Controls;
 using SoundDesigner.Models;
 using SoundDesigner.ViewModel;
@@ -17,8 +18,6 @@ namespace SoundDesigner.View
     /// </summary>
     public partial class ControlTestPage : UserControl
     {
-
-        protected Canvas? PanelCanvas;
 
         private bool _isDragging = false;
         private Point? offset = null;
@@ -32,16 +31,23 @@ namespace SoundDesigner.View
             MouseLeftButtonDown += ControlPanel_MouseLeftButtonDown;
             MouseLeftButtonUp += ControlPanel_MouseLeftButtonUp;
             MouseMove += ControlPanel_MouseMove;
-        }
 
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
+            var jack = new AudioJack();
 
-            //var presenter = this.FindChild<ContentPresenter>("PartPanelCanvas");
+            jack.ToY = 0;
+            Canvas.SetLeft(jack, 50);
+            Canvas.SetTop(jack, 50);
 
-            ///var element = PartPanelCanvas;
-            ///
+            PanelCanvas?.Children.Add(jack);
+
+            jack = new AudioJack
+            {
+                ToY = 1,
+            };
+
+            Canvas.SetLeft(jack, 150);
+            Canvas.SetTop(jack, 50);
+            PanelCanvas?.Children.Add(jack);
         }
 
         private void ControlPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -62,10 +68,22 @@ namespace SoundDesigner.View
 
             var audioJack = FindAudioJackFromHitPoint(e.GetPosition(PanelCanvas), PanelCanvas);
             if (audioJack == null || audioJack == from) return;
-            if (audioJack.ToY != from.ToY)
+            if (audioJack.ToY == from.ToY) return;
+
+            if (from.ToY == 0)
             {
-                //Connect(from, audioJack);
+                if (from.ConnectedFrom != null)
+                {
+                    PanelCanvas?.Children.Remove(from.ConnectedFrom);
+                }
             }
+            else if (audioJack is { ToY: 0, ConnectedFrom: not null })
+            {
+                PanelCanvas?.Children.Remove(audioJack.ConnectedFrom);
+            }
+
+            var newCable = from.Connect(audioJack);
+            PanelCanvas?.Children.Add(newCable);
         }
 
         private void ControlPanel_MouseMove(object sender, MouseEventArgs e)
@@ -73,7 +91,7 @@ namespace SoundDesigner.View
 
             if (!_isDragging || PanelCanvas == null || _draggingCable == null || _draggingFrom == null) return;
 
-            _draggingCable.EndPoint = e.GetPosition(this);
+            _draggingCable.EndPoint = e.GetPosition(PanelCanvas);
             _draggingCable.DraggableState = Cable.DraggableStateEnum.DraggingNoDrop;
 
             var audioJack = FindAudioJackFromHitPoint(e.GetPosition(PanelCanvas), PanelCanvas);
@@ -134,10 +152,5 @@ namespace SoundDesigner.View
             return image?.FindAncestor<AudioJack>();
         }
 
-        private void ControlTestPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            var firstJack = AudioJacks.ItemContainerGenerator.ContainerFromIndex(0);
-            PanelCanvas = firstJack.FindAncestor<Canvas>();
-        }
     }
 }

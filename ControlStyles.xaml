@@ -38,7 +38,7 @@
         </Setter>
     </Style>-->
 
-    <Style TargetType="{x:Type controls:AudioJack}">
+    <!--<Style TargetType="{x:Type controls:AudioJack}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:AudioJack}">
@@ -48,7 +48,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
     <!--<Style TargetType="{x:Type controls:ControlPanel}">
         <Setter Property="Template">
@@ -60,14 +60,14 @@
         </Setter>
     </Style>-->
 
-    <!--<Style TargetType="{x:Type controls:MainPanel}" BasedOn="{StaticResource {x:Type controls:ControlPanel}}">
+    <Style TargetType="{x:Type controls:MainPanel}" BasedOn="{StaticResource {x:Type controls:ControlPanel}}">
         <Style.Resources>
             <ImageBrush x:Key="BackgroundBrush" ImageSource="Assets/background-texture.png"/>
         </Style.Resources>
 
          <Setter Property="Width" Value="800" />
         <Setter Property="Height" Value="600" />
-    </Style>-->
+    </Style>
 
     <!--<Style TargetType="{x:Type controls:Cable}">
         <Setter Property="Template">
