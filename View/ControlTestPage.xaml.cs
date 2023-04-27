@@ -28,13 +28,20 @@ namespace SoundDesigner.View
         public ControlTestPage()
         {
             InitializeComponent();
+
+            MouseLeftButtonDown += ControlPanel_MouseLeftButtonDown;
+            MouseLeftButtonUp += ControlPanel_MouseLeftButtonUp;
+            MouseMove += ControlPanel_MouseMove;
         }
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            var presenter = this.FindChild<ContentPresenter>("PartPanelCanvas");
+            //var presenter = this.FindChild<ContentPresenter>("PartPanelCanvas");
+
+            ///var element = PartPanelCanvas;
+            ///
         }
 
         private void ControlPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -80,6 +87,33 @@ namespace SoundDesigner.View
 
         }
 
+        private void ControlPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (PanelCanvas == null) return;
+
+            var audioJack = FindAudioJackFromHitPoint(e.GetPosition(PanelCanvas), PanelCanvas);
+            if (audioJack == null) return;
+
+            // Start dragging the control
+            _isDragging = true;
+            _draggingFrom = audioJack;
+
+            offset = new Point(audioJack.X, audioJack.Y);
+
+            _draggingCable = new Cable(offset, offset, Color.FromRgb(128, 128, 128));
+            PanelCanvas.Children.Add(_draggingCable);
+
+            if (_draggingFrom.ConnectedFrom != null)
+            {
+                // if we are an input jack, remove the current cable
+                PanelCanvas.Children.Remove(_draggingFrom.ConnectedFrom);
+                _draggingFrom.ConnectedFrom = null;
+            }
+
+            CaptureMouse();
+            ControlPanel_MouseMove(sender, e);
+        }
+
         private static AudioJack? FindAudioJackFromHitPoint(Point hitPoint, Canvas canvas)
         {
             var hitResults = new List<HitTestResult>();
@@ -100,5 +134,10 @@ namespace SoundDesigner.View
             return image?.FindAncestor<AudioJack>();
         }
 
+        private void ControlTestPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var firstJack = AudioJacks.ItemContainerGenerator.ContainerFromIndex(0);
+            PanelCanvas = firstJack.FindAncestor<Canvas>();
+        }
     }
 }

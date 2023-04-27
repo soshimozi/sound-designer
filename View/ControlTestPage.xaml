@@ -6,6 +6,7 @@
         xmlns:controls="clr-namespace:SoundDesigner.Controls"
         xmlns:viewModel="clr-namespace:SoundDesigner.ViewModel"
         mc:Ignorable="d"
+        Loaded="ControlTestPage_OnLoaded"
         Background="Transparent"
         Height="510" Width="800">
     
