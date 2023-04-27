@@ -15,5 +15,8 @@
         <view:SoundGenerationPage />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type vm:ControlTestViewModel}">
+        <view:ControlTestPage />
+    </DataTemplate>
 
 </ResourceDictionary>

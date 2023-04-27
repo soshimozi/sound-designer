@@ -7,6 +7,7 @@ using System.Transactions;
 using System.Windows.Input;
 using SoundDesigner.Lib;
 using SoundDesigner.Lib.CommandRouting;
+using SoundDesigner.View;
 
 namespace SoundDesigner.ViewModel
 {
@@ -27,7 +28,7 @@ namespace SoundDesigner.ViewModel
         private void HomePage(object obj) => CurrentView = new HomePageViewModel();
         private void SoundGenerationPage(object obj) => CurrentView = new SoundGenerationViewModel();
         private void SettingsPage(object obj) => CurrentView = new SettingsViewModel();
-        private void ControlTestPage(object obj) => CurrentView = new MainWindowControlTest();
+        private void ControlTestPage(object obj) => CurrentView = new ControlTestPage();
 
         public NavigationViewModel()
         {
