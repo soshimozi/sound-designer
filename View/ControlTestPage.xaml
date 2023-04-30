@@ -6,47 +6,22 @@
         xmlns:viewModel="clr-namespace:SoundDesigner.ViewModel"
         xmlns:control="clr-namespace:SoundDesigner.Control"
         mc:Ignorable="d"
-        Loaded="ControlTestPage_OnLoaded"
         Background="Transparent"
         Height="510" Width="800">
-    
-    <UserControl.DataContext>
-        <viewModel:ControlTestViewModel />
-    </UserControl.DataContext>
 
     <UserControl.Resources>
         <ImageBrush x:Key="PanelBrush" ImageSource="/Asset/background-texture.png"/>
     </UserControl.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
 
         <Border Background="{StaticResource PanelBrush}" BorderBrush="White" BorderThickness="2" CornerRadius="5" Height="500" Width="600">
-
-            <ItemsControl x:Name="AudioJacks" ItemsSource="{Binding Jacks}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas x:Name="PartPanelCanvas" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <control:AudioJack></control:AudioJack>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemContainerStyle>
-                    <Style>
-                        <Setter Property="Canvas.Left" Value="{Binding  X}">
-                        </Setter>
-                        <Setter Property="Canvas.Top" Value="{Binding  Y}">
-                        </Setter>
-                    </Style>
-                </ItemsControl.ItemContainerStyle>
-            </ItemsControl>
+            
+            <Canvas x:Name="PanelCanvas">
+                <control:AudioJack Canvas.Left="200" Canvas.Top="150" ToY="0" />
+            </Canvas>
 
         </Border>
-    </Grid>
+
+
 
 </UserControl>

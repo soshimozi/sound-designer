@@ -17,8 +17,6 @@ namespace SoundDesigner.View;
 public partial class ControlTestPage : UserControl
 {
 
-    protected Canvas? PanelCanvas;
-
     private bool _isDragging = false;
     private Point? offset = null;
     private AudioJack? _draggingFrom = null;
@@ -135,7 +133,7 @@ public partial class ControlTestPage : UserControl
 
     private void ControlTestPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        var firstJack = AudioJacks.ItemContainerGenerator.ContainerFromIndex(0);
-        PanelCanvas = firstJack.FindAncestor<Canvas>();
+        //var firstJack = AudioJacks.ItemContainerGenerator.ContainerFromIndex(0);
+        //PanelCanvas = firstJack.FindAncestor<Canvas>();
     }
 }
