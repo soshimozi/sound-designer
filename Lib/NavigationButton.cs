@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SoundDesigner.Lib
+namespace SoundDesigner.Lib;
+
+internal class NavigationButton : RadioButton
 {
-    internal class NavigationButton : RadioButton
+    static NavigationButton()
     {
-        static NavigationButton()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(NavigationButton), new FrameworkPropertyMetadata(typeof(NavigationButton)));
-        }
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(NavigationButton), new FrameworkPropertyMetadata(typeof(NavigationButton)));
     }
 }

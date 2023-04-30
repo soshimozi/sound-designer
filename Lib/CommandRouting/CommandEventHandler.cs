@@ -1,5 +1,5 @@
 ﻿using SoundDesigner.Lib.CommandRouting.EventArgs;
 
-namespace ZoeyDesktopListener.Lib.CommandRouting;
+namespace SoundDesigner.Lib.CommandRouting;
 
 public delegate void CommandEventHandler(object sender, CommandEventArgs args);

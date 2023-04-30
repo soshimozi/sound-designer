@@ -19,4 +19,8 @@
         <view:ControlTestPage />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type vm:PortViewModel}">
+        <view:PortView />
+    </DataTemplate>
+
 </ResourceDictionary>

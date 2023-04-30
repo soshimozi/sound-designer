@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
 using SoundDesigner.Lib.CommandRouting.EventArgs;
-using ZoeyDesktopListener.Lib.CommandRouting;
 
 namespace SoundDesigner.Lib.CommandRouting;
 

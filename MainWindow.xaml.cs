@@ -13,21 +13,20 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SoundDesigner
-{
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
-    {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+namespace SoundDesigner;
 
-        private void CloseApp_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow : SoundDesignerModernWindow
+{
+    public MainWindow()
+    {
+        InitializeComponent();
+    }
+
+    private void CloseApp_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 }

@@ -15,17 +15,20 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Combobox.xaml" />
 
 
-                <ResourceDictionary Source="Styles/Color.xaml" />
-                <ResourceDictionary Source="Styles/Page.xaml" />
-                <ResourceDictionary Source="Styles/Image.xaml" />
-                <ResourceDictionary Source="Styles/Text.xaml" />
-                <ResourceDictionary Source="Styles/Button.xaml" />
-                <ResourceDictionary Source="Styles/Slider.xaml" />
-                <ResourceDictionary Source="Styles/Knob.xaml" />
+                <ResourceDictionary Source="Style/Color.xaml" />
+                <ResourceDictionary Source="Style/Page.xaml" />
+                <ResourceDictionary Source="Style/Image.xaml" />
+                <ResourceDictionary Source="Style/Text.xaml" />
+                <ResourceDictionary Source="Style/Button.xaml" />
+                <ResourceDictionary Source="Style/Slider.xaml" />
+                <ResourceDictionary Source="Style/Knob.xaml" />
                 <ResourceDictionary Source="DataTemplate.xaml" />
-                <ResourceDictionary Source="Styles/ControlPanel.xaml" />
-                <ResourceDictionary Source="Styles/AudioJack.xaml" />
+                <ResourceDictionary Source="Style/ControlPanel.xaml" />
+                <ResourceDictionary Source="Style/AudioJack.xaml" />
+                <ResourceDictionary Source="Style/Theme.xaml"/>
+                <ResourceDictionary Source="Style/UI.xaml"/>
 
+                <ResourceDictionary Source="Theme/SoundDesignerModernWindow.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

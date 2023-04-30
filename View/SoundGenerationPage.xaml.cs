@@ -13,17 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SoundDesigner.View
-{
-    /// <summary>
-    /// Interaction logic for SoundGenerationPage.xaml
-    /// </summary>
-    public partial class SoundGenerationPage : UserControl
-    {
-        public SoundGenerationPage()
-        {
-            InitializeComponent();
-        }
+namespace SoundDesigner.View;
 
+/// <summary>
+/// Interaction logic for SoundGenerationPage.xaml
+/// </summary>
+public partial class SoundGenerationPage : UserControl
+{
+    public SoundGenerationPage()
+    {
+        InitializeComponent();
     }
+
 }

@@ -5,10 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SoundDesigner.View"
              xmlns:viewModel="clr-namespace:SoundDesigner.ViewModel"
-             xmlns:converters="clr-namespace:SoundDesigner.Converters"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:helpers="clr-namespace:SoundDesigner.Helpers"
-             xmlns:controls="clr-namespace:SoundDesigner.Controls"
+             xmlns:converter="clr-namespace:SoundDesigner.Converter"
+             xmlns:control="clr-namespace:SoundDesigner.Control"
+             xmlns:helper="clr-namespace:SoundDesigner.Helper"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="1000">
     <UserControl.DataContext>
@@ -106,12 +106,12 @@
                 </Button.Template>
             </Button>
         </DataTemplate>
-        <converters:NoteToCanvasLocationConverter x:Key="NoteToCanvasLocationConverter"/>
-        <converters:NoteToZIndexConverter x:Key="NoteToZIndexConverter" />
-        <converters:RoundingValueConverter x:Key="RoundingValueConverter"/>
-        <converters:FrequencyValueConverter x:Key="FrequencyValueConverter" />
-        <converters:DefaultValueConverter x:Key="DefaultValueConverter"/>
-        <converters:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
+        <converter:NoteToCanvasLocationConverter x:Key="NoteToCanvasLocationConverter"/>
+        <converter:NoteToZIndexConverter x:Key="NoteToZIndexConverter" />
+        <converter:RoundingValueConverter x:Key="RoundingValueConverter"/>
+        <converter:FrequencyValueConverter x:Key="FrequencyValueConverter" />
+        <converter:DefaultValueConverter x:Key="DefaultValueConverter"/>
+        <converter:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
 
         <Style x:Key="FadingBorderStyle" TargetType="Border">
             <Setter Property="BorderThickness" Value="1" />
@@ -154,7 +154,7 @@
         </Style>
 
 
-        <Style TargetType="controls:KnobControl" x:Key="FixedSizeControl">
+        <Style TargetType="control:KnobControl" x:Key="FixedSizeControl">
             <Setter Property="Width" Value="64"></Setter>
             <Setter Property="Height" Value="64"></Setter>
         </Style>
@@ -174,13 +174,13 @@
                                 Background="#222"
                                 Padding="2"
                                 Width="Auto"
-                                FontFamily="/Fonts/#Syncopate"
+                                FontFamily="/Font/#Syncopate"
                                 HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Top" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="FontFamily" Value="/Fonts/#Syncopate" />
+            <Setter Property="FontFamily" Value="/Font/#Syncopate" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Foreground" Value="White" />
         </Style>
@@ -218,7 +218,7 @@
                                   VerticalAlignment="Top" 
                                   HorizontalAlignment="Left"
                                   Width="90"
-                                  FontFamily="/Fonts/#Syncopate"
+                                  FontFamily="/Font/#Syncopate"
                                   ToolTipService.ToolTip="Please select a shape.">
 
                         </ComboBox>
@@ -241,7 +241,7 @@
                                 </Border>
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl 
+                                    <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=ModFrequency, Mode=TwoWay}"
                                     Margin="0,2,0,0" 
@@ -251,14 +251,14 @@
                                     Width="64" 
                                     Height="64">
 
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
-                                    </controls:KnobControl>
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                        Foreground="White" FontWeight="Bold"
@@ -279,7 +279,7 @@
                                 </Border>
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl 
+                                    <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=Osc1Tremolo, Mode=TwoWay}" 
                                     Margin="0,2,0,0" 
@@ -288,14 +288,14 @@
                                     Step="10"
                                     Width="64" 
                                     Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
-                                    </controls:KnobControl>
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center" Padding="0, 5, 0, 0"
                                        Foreground="White" FontWeight="Bold"
@@ -319,7 +319,7 @@
                                 </Border>
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl 
+                                    <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Margin="0,2,0,0" 
                                     Minimum="0"
@@ -328,14 +328,14 @@
                                     Value="{Binding Path=Osc2Tremolo, Mode=TwoWay}" 
                                     Width="64" 
                                     Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
-                                    </controls:KnobControl>
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center" Padding="0, 5, 0, 0"
                                        Foreground="White" FontWeight="Bold"
@@ -369,7 +369,7 @@
                                           VerticalAlignment="Top" 
                                           HorizontalAlignment="Left"
                                           Width="110"
-                                          FontFamily="/Fonts/#Syncopate"
+                                          FontFamily="/Font/#Syncopate"
                                           ToolTipService.ToolTip="Please select a waveform.">
                                 </ComboBox>
                                 <Grid Margin="0, 10, 0, 0" VerticalAlignment="Bottom">
@@ -385,7 +385,7 @@
                                     </Border>
                                     <StackPanel Grid.Row="1">
 
-                                        <controls:KnobControl 
+                                        <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=Osc1Detune, Mode=TwoWay}" 
                                     Margin="0,2,0,0" 
@@ -394,14 +394,14 @@
                                     Step="10"
                                     Width="64" 
                                     Height="64">
-                                            <controls:KnobControl.SpriteSheet>
-                                                <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                    <helpers:SpriteSheet.Range>
-                                                        <controls:IntegerRange End="100" />
-                                                    </helpers:SpriteSheet.Range>
-                                                </helpers:SpriteSheet>
-                                            </controls:KnobControl.SpriteSheet>
-                                        </controls:KnobControl>
+                                            <control:KnobControl.SpriteSheet>
+                                                <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                    <helper:SpriteSheet.Range>
+                                                        <control:IntegerRange End="100" />
+                                                    </helper:SpriteSheet.Range>
+                                                </helper:SpriteSheet>
+                                            </control:KnobControl.SpriteSheet>
+                                        </control:KnobControl>
 
                                         <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                                Foreground="White" FontWeight="Bold"
@@ -422,7 +422,7 @@
                                           VerticalAlignment="Top" 
                                           HorizontalAlignment="Left"
                                           Width="110"
-                                          FontFamily="/Fonts/#Syncopate"
+                                          FontFamily="/Font/#Syncopate"
                                           ToolTipService.ToolTip="Please select an interval.">
                                 </ComboBox>
                                 <Grid Margin="0, 10, 0, 0" VerticalAlignment="Bottom">
@@ -438,7 +438,7 @@
                                     </Border>
                                     <StackPanel  Grid.Row="1">
 
-                                        <controls:KnobControl 
+                                        <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=Osc1Mix, Mode=TwoWay}" 
                                     Margin="0,2,0,0" 
@@ -447,14 +447,14 @@
                                     Step="10"
                                     Width="64" 
                                     Height="64">
-                                            <controls:KnobControl.SpriteSheet>
-                                                <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                    <helpers:SpriteSheet.Range>
-                                                        <controls:IntegerRange End="100" />
-                                                    </helpers:SpriteSheet.Range>
-                                                </helpers:SpriteSheet>
-                                            </controls:KnobControl.SpriteSheet>
-                                        </controls:KnobControl>
+                                            <control:KnobControl.SpriteSheet>
+                                                <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                    <helper:SpriteSheet.Range>
+                                                        <control:IntegerRange End="100" />
+                                                    </helper:SpriteSheet.Range>
+                                                </helper:SpriteSheet>
+                                            </control:KnobControl.SpriteSheet>
+                                        </control:KnobControl>
 
                                         <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                            Foreground="White" FontWeight="Bold"
@@ -480,7 +480,7 @@
                                           VerticalAlignment="Top" 
                                           HorizontalAlignment="Left"
                                           Width="110"
-                                          FontFamily="/Fonts/#Syncopate"
+                                          FontFamily="/Font/#Syncopate"
                                           ToolTipService.ToolTip="Please select a waveform.">
                                 </ComboBox>
 
@@ -497,7 +497,7 @@
                                     </Border>
                                     <StackPanel Grid.Row="1">
 
-                                        <controls:KnobControl 
+                                        <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=Osc2Detune, Mode=TwoWay}" 
                                     Margin="0,2,0,0" 
@@ -506,14 +506,14 @@
                                     Step="10"
                                     Width="64" 
                                     Height="64">
-                                            <controls:KnobControl.SpriteSheet>
-                                                <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                    <helpers:SpriteSheet.Range>
-                                                        <controls:IntegerRange End="100" />
-                                                    </helpers:SpriteSheet.Range>
-                                                </helpers:SpriteSheet>
-                                            </controls:KnobControl.SpriteSheet>
-                                        </controls:KnobControl>
+                                            <control:KnobControl.SpriteSheet>
+                                                <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                    <helper:SpriteSheet.Range>
+                                                        <control:IntegerRange End="100" />
+                                                    </helper:SpriteSheet.Range>
+                                                </helper:SpriteSheet>
+                                            </control:KnobControl.SpriteSheet>
+                                        </control:KnobControl>
 
                                         <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                            Foreground="White" FontWeight="Bold"
@@ -534,7 +534,7 @@
                                               VerticalAlignment="Top" 
                                               HorizontalAlignment="Left"
                                               Width="110"
-                                              FontFamily="/Fonts/#Syncopate"
+                                              FontFamily="/Font/#Syncopate"
                                               ToolTipService.ToolTip="Please select an interval.">
                                 </ComboBox>
                                 <Grid Margin="0, 10, 0, 0" VerticalAlignment="Bottom">
@@ -550,7 +550,7 @@
                                     </Border>
                                     <StackPanel Grid.Row="1">
 
-                                        <controls:KnobControl 
+                                        <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=Osc2Mix, Mode=TwoWay}" 
                                     Margin="0,2,0,0" 
@@ -559,14 +559,14 @@
                                     Step="10"
                                     Width="64" 
                                     Height="64">
-                                            <controls:KnobControl.SpriteSheet>
-                                                <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                    <helpers:SpriteSheet.Range>
-                                                        <controls:IntegerRange End="100" />
-                                                    </helpers:SpriteSheet.Range>
-                                                </helpers:SpriteSheet>
-                                            </controls:KnobControl.SpriteSheet>
-                                        </controls:KnobControl>
+                                            <control:KnobControl.SpriteSheet>
+                                                <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                    <helper:SpriteSheet.Range>
+                                                        <control:IntegerRange End="100" />
+                                                    </helper:SpriteSheet.Range>
+                                                </helper:SpriteSheet>
+                                            </control:KnobControl.SpriteSheet>
+                                        </control:KnobControl>
 
                                         <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                            Foreground="White" FontWeight="Bold"
@@ -601,7 +601,7 @@
 
                             <StackPanel Grid.Row="1">
 
-                                <controls:KnobControl 
+                                <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=FilterCutoff, Mode=TwoWay}" 
                                     Margin="0,2,0,0" 
@@ -612,14 +612,14 @@
                                     Width="64" 
                                     Height="64">
 
-                                    <controls:KnobControl.SpriteSheet>
-                                        <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                            <helpers:SpriteSheet.Range>
-                                                <controls:IntegerRange End="100" />
-                                            </helpers:SpriteSheet.Range>
-                                        </helpers:SpriteSheet>
-                                    </controls:KnobControl.SpriteSheet>
-                                </controls:KnobControl>
+                                    <control:KnobControl.SpriteSheet>
+                                        <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                            <helper:SpriteSheet.Range>
+                                                <control:IntegerRange End="100" />
+                                            </helper:SpriteSheet.Range>
+                                        </helper:SpriteSheet>
+                                    </control:KnobControl.SpriteSheet>
+                                </control:KnobControl>
 
                                 <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                Foreground="White" FontWeight="Bold"
@@ -640,7 +640,7 @@
 
                             <StackPanel Grid.Row="1">
 
-                                <controls:KnobControl 
+                                <control:KnobControl 
                             VerticalAlignment="Top" 
                             Value="{Binding Path=FilterQ, Mode=TwoWay}" 
                             Margin="0,2,0,0" 
@@ -648,15 +648,15 @@
                             Minimum="0"
                             Width="64" 
                             Height="64">
-                                    <controls:KnobControl.SpriteSheet>
-                                        <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                            <helpers:SpriteSheet.Range>
-                                                <controls:IntegerRange End="100" />
-                                            </helpers:SpriteSheet.Range>
-                                        </helpers:SpriteSheet>
-                                    </controls:KnobControl.SpriteSheet>
+                                    <control:KnobControl.SpriteSheet>
+                                        <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                            <helper:SpriteSheet.Range>
+                                                <control:IntegerRange End="100" />
+                                            </helper:SpriteSheet.Range>
+                                        </helper:SpriteSheet>
+                                    </control:KnobControl.SpriteSheet>
 
-                                </controls:KnobControl>
+                                </control:KnobControl>
 
                                 <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                Foreground="White" FontWeight="Bold"
@@ -677,7 +677,7 @@
 
                             <StackPanel Grid.Row="1">
 
-                                <controls:KnobControl 
+                                <control:KnobControl 
                             VerticalAlignment="Top" 
                             Value="{Binding Path=FilterModulation, Mode=TwoWay}" 
                             Margin="0,2,0,0" 
@@ -686,14 +686,14 @@
                             Step="10"
                             Width="64" 
                             Height="64">
-                                    <controls:KnobControl.SpriteSheet>
-                                        <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                            <helpers:SpriteSheet.Range>
-                                                <controls:IntegerRange End="100" />
-                                            </helpers:SpriteSheet.Range>
-                                        </helpers:SpriteSheet>
-                                    </controls:KnobControl.SpriteSheet>
-                                </controls:KnobControl>
+                                    <control:KnobControl.SpriteSheet>
+                                        <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                            <helper:SpriteSheet.Range>
+                                                <control:IntegerRange End="100" />
+                                            </helper:SpriteSheet.Range>
+                                        </helper:SpriteSheet>
+                                    </control:KnobControl.SpriteSheet>
+                                </control:KnobControl>
 
                                 <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                Foreground="White" FontWeight="Bold"
@@ -715,7 +715,7 @@
 
                             <StackPanel Grid.Row="1">
 
-                                <controls:KnobControl 
+                                <control:KnobControl 
                             VerticalAlignment="Top" 
                             Value="{Binding Path=FilterEnvelopeMix, Mode=TwoWay}" 
                             Margin="0,2,0,0" 
@@ -724,15 +724,15 @@
                             Step="10"
                             Width="64" 
                             Height="64">
-                                    <controls:KnobControl.SpriteSheet>
-                                        <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                            <helpers:SpriteSheet.Range>
-                                                <controls:IntegerRange End="100" />
-                                            </helpers:SpriteSheet.Range>
-                                        </helpers:SpriteSheet>
-                                    </controls:KnobControl.SpriteSheet>
+                                    <control:KnobControl.SpriteSheet>
+                                        <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                            <helper:SpriteSheet.Range>
+                                                <control:IntegerRange End="100" />
+                                            </helper:SpriteSheet.Range>
+                                        </helper:SpriteSheet>
+                                    </control:KnobControl.SpriteSheet>
 
-                                </controls:KnobControl>
+                                </control:KnobControl>
 
                                 <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                Foreground="White" FontWeight="Bold"
@@ -771,7 +771,7 @@
                                 </Border>
 
                                 <StackPanel Grid.Row="1">
-                                    <controls:KnobControl 
+                                    <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=FilterEnvelopeAttack, Mode=TwoWay}" 
                                     Margin="0,2,0,0" 
@@ -780,15 +780,15 @@
                                     Step="10"
                                     Width="64" 
                                     Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
 
-                                    </controls:KnobControl>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                        Foreground="White" FontWeight="Bold"
@@ -808,7 +808,7 @@
                                 </Border>
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl                                     
+                                    <control:KnobControl                                     
                                 Maximum="100"
                                 Minimum="0"
                                 Step="10"
@@ -816,14 +816,14 @@
                                 Value="{Binding Path=FilterEnvelopeDecay, Mode=TwoWay}" 
                                 Margin="0,2,0,0" 
                                 Width="64" Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
-                                    </controls:KnobControl>
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                    Foreground="White" FontWeight="Bold"
@@ -843,20 +843,20 @@
                                 </Border>
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl                                     
+                                    <control:KnobControl                                     
                                 Maximum="100"
                                 Minimum="0"
                                 Step="10"
                                 VerticalAlignment="Top" Value="{Binding Path=FilterEnvelopeSustain, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
 
-                                    </controls:KnobControl>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                    Foreground="White" FontWeight="Bold"
@@ -876,7 +876,7 @@
                                 </Border>
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl 
+                                    <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=FilterEnvelopeRelease, Mode=TwoWay}" 
                                     Maximum="100"
@@ -884,15 +884,15 @@
                                     Step="10"
                                     Margin="0,2,0,0" 
                                     Width="64" Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
 
-                                    </controls:KnobControl>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                        Foreground="White" FontWeight="Bold"
@@ -926,7 +926,7 @@
                                 </Border>
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl 
+                                    <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=VolumeEnvelopeAttack, Mode=TwoWay}" 
                                     Maximum="100"
@@ -934,15 +934,15 @@
                                     Step="10"
                                     Margin="0,2,0,0" 
                                     Width="64" Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
 
-                                    </controls:KnobControl>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                        Foreground="White" FontWeight="Bold"
@@ -962,20 +962,20 @@
                                 </Border>
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl 
+                                    <control:KnobControl 
                                 VerticalAlignment="Top" 
                                 Value="{Binding Path=VolumeEnvelopeDecay, Mode=TwoWay}" 
                                 Margin="0,2,0,0" 
                                 Width="64" Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
 
-                                    </controls:KnobControl>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                    Foreground="White" FontWeight="Bold"
@@ -996,16 +996,16 @@
                                 </Border>
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl VerticalAlignment="Top" Value="{Binding Path=VolumeEnvelopeSustain, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
+                                    <control:KnobControl VerticalAlignment="Top" Value="{Binding Path=VolumeEnvelopeSustain, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
 
-                                    </controls:KnobControl>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                        Foreground="White" FontWeight="Bold"
@@ -1025,15 +1025,15 @@
                                 </Border>
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl VerticalAlignment="Top" Value="{Binding Path=VolumeEnvelopeRelease, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
-                                    </controls:KnobControl>
+                                    <control:KnobControl VerticalAlignment="Top" Value="{Binding Path=VolumeEnvelopeRelease, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                        Foreground="White" FontWeight="Bold"
@@ -1066,16 +1066,16 @@
 
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl VerticalAlignment="Top" Value="{Binding Path=Drive, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
+                                    <control:KnobControl VerticalAlignment="Top" Value="{Binding Path=Drive, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
 
-                                    </controls:KnobControl>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                    Foreground="White" FontWeight="Bold"
@@ -1098,16 +1098,16 @@
 
 
                                 <StackPanel Grid.Row="1">
-                                    <controls:KnobControl VerticalAlignment="Top" Value="{Binding Path=Reverb, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
+                                    <control:KnobControl VerticalAlignment="Top" Value="{Binding Path=Reverb, Mode=TwoWay}" Margin="0,2,0,0" Width="64" Height="64">
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
 
-                                    </controls:KnobControl>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                        Foreground="White" FontWeight="Bold"
@@ -1130,21 +1130,21 @@
 
                                 <StackPanel Grid.Row="1">
 
-                                    <controls:KnobControl 
+                                    <control:KnobControl 
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=MasterVolume, Mode=TwoWay}" 
                                     Margin="0,2,0,0" 
                                     Step="10"
                                     Width="64" 
                                     Height="64">
-                                        <controls:KnobControl.SpriteSheet>
-                                            <helpers:SpriteSheet Source="/Assets/LittlePhatty.png" Orientation="Vertical" Cells="101">
-                                                <helpers:SpriteSheet.Range>
-                                                    <controls:IntegerRange End="100" />
-                                                </helpers:SpriteSheet.Range>
-                                            </helpers:SpriteSheet>
-                                        </controls:KnobControl.SpriteSheet>
-                                    </controls:KnobControl>
+                                        <control:KnobControl.SpriteSheet>
+                                            <helper:SpriteSheet Source="/Asset/LittlePhatty.png" Orientation="Vertical" Cells="101">
+                                                <helper:SpriteSheet.Range>
+                                                    <control:IntegerRange End="100" />
+                                                </helper:SpriteSheet.Range>
+                                            </helper:SpriteSheet>
+                                        </control:KnobControl.SpriteSheet>
+                                    </control:KnobControl>
 
                                     <Label Style="{DynamicResource MaterialDesignLabel}" HorizontalAlignment="Center"
                                    Foreground="White" FontWeight="Bold"
@@ -1163,7 +1163,7 @@
                                       SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"  
                                       VerticalAlignment="Top" 
                                       HorizontalAlignment="Left"
-                                      FontFamily="/Fonts/#Syncopate"
+                                      FontFamily="/Font/#Syncopate"
                                       ToolTipService.ToolTip="Please select a waveform.">
                                 </ComboBox>
 
@@ -1176,7 +1176,7 @@
                                       SelectedItem="{Binding KeyboardOctave, Mode=TwoWay}"  
                                       VerticalAlignment="Top" 
                                       HorizontalAlignment="Left"
-                                      FontFamily="/Fonts/#Syncopate"
+                                      FontFamily="/Font/#Syncopate"
                                       ToolTipService.ToolTip="Please select a waveform.">
                                 </ComboBox>
                             </StackPanel>

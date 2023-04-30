@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoundDesigner.ViewModel
+namespace SoundDesigner.ViewModel;
+
+internal class SettingsViewModel
 {
-    internal class SettingsViewModel
-    {
-    }
 }

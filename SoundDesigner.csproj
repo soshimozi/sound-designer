@@ -8,178 +8,193 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controls\KnobControl.xaml.cs" />
-    <Compile Remove="Controls\Piano.xaml.cs" />
+    <Compile Remove="Control\KnobControl.xaml.cs" />
+    <Compile Remove="Control\Piano.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Assets\AudioJack.png" />
-    <None Remove="Assets\AudioJackImage.png" />
-    <None Remove="Assets\background-texture.png" />
-    <None Remove="Assets\home-page.png" />
-    <None Remove="Assets\img_about.png" />
-    <None Remove="Assets\img_electronic.png" />
-    <None Remove="Assets\img_exit.png" />
-    <None Remove="Assets\img_home.png" />
-    <None Remove="Assets\img_music.png" />
-    <None Remove="Assets\img_setting.png" />
-    <None Remove="Assets\jack.png" />
-    <None Remove="Assets\jack2.png" />
-    <None Remove="Assets\LittlePhatty.png" />
-    <None Remove="Assets\PC3_EnvFader_01_Orange.png" />
-    <None Remove="Assets\Possible_SVG_Jack.png" />
-    <None Remove="Assets\Possible_SVG_Jack2.png" />
-    <None Remove="Assets\roland_SH_101_knob.png" />
-    <None Remove="Assets\shutdown_def.png" />
-    <None Remove="Assets\shutdown_mo.png" />
-    <None Remove="Assets\sw3horz.png" />
-    <None Remove="Assets\switch_toggle.png" />
-    <None Remove="Fonts\Syncopate.ttf" />
+    <None Remove="Asset\AudioJack.png" />
+    <None Remove="Asset\AudioJackImage.png" />
+    <None Remove="Asset\background-texture.png" />
+    <None Remove="Asset\home-page.png" />
+    <None Remove="Asset\img_about.png" />
+    <None Remove="Asset\img_electronic.png" />
+    <None Remove="Asset\img_exit.png" />
+    <None Remove="Asset\img_home.png" />
+    <None Remove="Asset\img_music.png" />
+    <None Remove="Asset\img_setting.png" />
+    <None Remove="Asset\jack.png" />
+    <None Remove="Asset\jack2.png" />
+    <None Remove="Asset\LittlePhatty.png" />
+    <None Remove="Asset\PC3_EnvFader_01_Orange.png" />
+    <None Remove="Asset\Possible_SVG_Jack.png" />
+    <None Remove="Asset\Possible_SVG_Jack2.png" />
+    <None Remove="Asset\roland_SH_101_knob.png" />
+    <None Remove="Asset\shutdown_def.png" />
+    <None Remove="Asset\shutdown_mo.png" />
+    <None Remove="Asset\sw3horz.png" />
+    <None Remove="Asset\switch_toggle.png" />
+    <None Remove="Font\Syncopate.ttf" />
   </ItemGroup>
 
   <ItemGroup>
-    <Page Remove="Controls\KnobControl.xaml" />
-    <Page Remove="Controls\Piano.xaml" />
+    <Page Remove="Control\KnobControl.xaml" />
+    <Page Remove="Control\Piano.xaml" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\AudioJack.png">
+    <Content Include="Asset\AudioJack.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\AudioJackImage.png">
+    <Content Include="Asset\AudioJackImage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\background-texture.png">
+    <Content Include="Asset\background-texture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\home-page.png">
+    <Content Include="Asset\home-page.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\img_about.png">
+    <Content Include="Asset\img_about.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\img_electronic.png">
+    <Content Include="Asset\img_electronic.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\img_exit.png">
+    <Content Include="Asset\img_exit.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\img_home.png">
+    <Content Include="Asset\img_home.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\img_music.png">
+    <Content Include="Asset\img_music.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\img_setting.png">
+    <Content Include="Asset\img_setting.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\jack.png">
+    <Content Include="Asset\jack.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\jack2.png">
+    <Content Include="Asset\jack2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\LittlePhatty.png">
+    <Content Include="Asset\LittlePhatty.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PC3_EnvFader_01_Orange.png">
+    <Content Include="Asset\PC3_EnvFader_01_Orange.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Possible_SVG_Jack.png">
+    <Content Include="Asset\Possible_SVG_Jack.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Possible_SVG_Jack2.png">
+    <Content Include="Asset\Possible_SVG_Jack2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\roland_SH_101_knob.png">
+    <Content Include="Asset\roland_SH_101_knob.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\shutdown_def.png">
+    <Content Include="Asset\shutdown_def.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\shutdown_mo.png">
+    <Content Include="Asset\shutdown_mo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\sw3horz.png">
+    <Content Include="Asset\sw3horz.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\switch_toggle.png">
+    <Content Include="Asset\switch_toggle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Fonts\Syncopate.ttf">
+    <Content Include="Font\Syncopate.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Folder Include="Model\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="MaterialDesignColors" Version="2.0.7" />
     <PackageReference Include="MaterialDesignThemes" Version="4.6.0" />
+    <PackageReference Include="ModernUI.WPF" Version="1.0.9" />
+    <PackageReference Include="PixelLab.BOT" Version="6.0.2" />
+    <PackageReference Include="PixelLab.Common" Version="6.0.2" />
+    <PackageReference Include="PixelLab.Core" Version="6.0.2" />
+    <PackageReference Include="Prism.Core" Version="8.1.97" />
+    <PackageReference Include="ShowMeTheXAML" Version="2.0.0" />
+    <PackageReference Include="Syncfusion.Data.WPF" Version="21.1.35" />
+    <PackageReference Include="Syncfusion.SfChart.WPF" Version="21.1.35" />
+    <PackageReference Include="Syncfusion.SfDiagram.WPF" Version="21.1.35" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="21.1.35" />
+    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="21.1.35" />
+    <PackageReference Include="Syncfusion.Shared.WPF" Version="21.1.35" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="21.1.35" />
+    <PackageReference Include="Syncfusion.Tools.WPF" Version="21.1.35" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Assets\img_acoustic.png">
+    <None Update="Asset\img_acoustic.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_album.png">
+    <None Update="Asset\img_album.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_arrow.png">
+    <None Update="Asset\img_arrow.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_artist.png">
+    <None Update="Asset\img_artist.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_folder.png">
+    <None Update="Asset\img_folder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_genre.png">
+    <None Update="Asset\img_genre.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_hiphop.png">
+    <None Update="Asset\img_hiphop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_history.png">
+    <None Update="Asset\img_history.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_hotkey.png">
+    <None Update="Asset\img_hotkey.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_input.png">
+    <None Update="Asset\img_input.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_jazz.png">
+    <None Update="Asset\img_jazz.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_metal.png">
+    <None Update="Asset\img_metal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_movies.png">
+    <None Update="Asset\img_movies.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_playlist.png">
+    <None Update="Asset\img_playlist.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_pop.png">
+    <None Update="Asset\img_pop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_rock.png">
+    <None Update="Asset\img_rock.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_search.png">
+    <None Update="Asset\img_search.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\img_songs.png">
+    <None Update="Asset\img_songs.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\max_def.png">
+    <None Update="Asset\max_def.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\max_mo.png">
+    <None Update="Asset\max_mo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

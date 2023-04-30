@@ -1,6 +1,6 @@
 ﻿using SoundDesigner.Lib;
 using System.Collections.ObjectModel;
-using SoundDesigner.Models;
+using SoundDesigner.Model;
 
 namespace SoundDesigner.ViewModel;
 

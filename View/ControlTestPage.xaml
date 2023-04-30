@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:SoundDesigner.Controls"
         xmlns:viewModel="clr-namespace:SoundDesigner.ViewModel"
+        xmlns:control="clr-namespace:SoundDesigner.Control"
         mc:Ignorable="d"
         Loaded="ControlTestPage_OnLoaded"
         Background="Transparent"
@@ -15,7 +15,7 @@
     </UserControl.DataContext>
 
     <UserControl.Resources>
-        <ImageBrush x:Key="PanelBrush" ImageSource="/Assets/background-texture.png"/>
+        <ImageBrush x:Key="PanelBrush" ImageSource="/Asset/background-texture.png"/>
     </UserControl.Resources>
 
     <Grid>
@@ -33,7 +33,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <controls:AudioJack></controls:AudioJack>
+                        <control:AudioJack></control:AudioJack>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemContainerStyle>
