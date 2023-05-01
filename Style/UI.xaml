@@ -41,9 +41,9 @@
     <!-- custom theme resources-->
     <Rectangle x:Key="WindowBackgroundContent" x:Shared="false">
         <Rectangle.Fill>
-            <LinearGradientBrush EndPoint="0,1" Opacity=".2">
-                <GradientStop Offset="0" Color="Transparent" />
-                <GradientStop Offset="1" Color="{DynamicResource AccentColor}" />
+            <LinearGradientBrush EndPoint="0,1">
+                <GradientStop Offset="0" Color="#232323" />
+                <GradientStop Offset="1" Color="#555" />
             </LinearGradientBrush>
         </Rectangle.Fill>
     </Rectangle>

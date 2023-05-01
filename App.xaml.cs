@@ -15,6 +15,7 @@ public partial class App : Application
 {
     static App()
     {
-        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("");
+        var licenseKey = Environment.GetEnvironmentVariable("syncfusion-licensekey");
+        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(licenseKey);
     }
 }
