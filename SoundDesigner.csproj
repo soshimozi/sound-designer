@@ -18,8 +18,10 @@
     <None Remove="Asset\background-texture.png" />
     <None Remove="Asset\home-page.png" />
     <None Remove="Asset\img_about.png" />
+    <None Remove="Asset\img_album.png" />
     <None Remove="Asset\img_electronic.png" />
     <None Remove="Asset\img_exit.png" />
+    <None Remove="Asset\img_history.png" />
     <None Remove="Asset\img_home.png" />
     <None Remove="Asset\img_music.png" />
     <None Remove="Asset\img_setting.png" />
@@ -58,10 +60,16 @@
     <Content Include="Asset\img_about.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Asset\img_album.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Asset\img_electronic.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Asset\img_exit.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Asset\img_history.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Asset\img_home.png">
@@ -113,6 +121,7 @@
 
   <ItemGroup>
     <Folder Include="Model\" />
+    <Folder Include="Extension\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -140,9 +149,6 @@
     <None Update="Asset\img_acoustic.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Asset\img_album.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Asset\img_arrow.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -156,9 +162,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Asset\img_hiphop.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Asset\img_history.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Asset\img_hotkey.png">

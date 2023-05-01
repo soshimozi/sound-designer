@@ -3,10 +3,6 @@
                     xmlns:vm="clr-namespace:SoundDesigner.ViewModel"
                     xmlns:view="clr-namespace:SoundDesigner.View">
 
-    <DataTemplate DataType="{x:Type vm:HomePageViewModel}">
-        <view:HomePage />
-    </DataTemplate>
-
     <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
         <view:SettingsPage />
     </DataTemplate>

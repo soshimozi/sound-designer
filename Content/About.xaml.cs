@@ -13,15 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SoundDesigner.View;
-
-/// <summary>
-/// Interaction logic for HomePage.xaml
-/// </summary>
-public partial class HomePage : UserControl
+namespace SoundDesigner.Content
 {
-    public HomePage()
+    /// <summary>
+    /// Interaction logic for About.xaml
+    /// </summary>
+    public partial class About : Page
     {
-        InitializeComponent();
+        public About()
+        {
+            InitializeComponent();
+        }
     }
 }

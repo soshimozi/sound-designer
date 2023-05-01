@@ -21,6 +21,7 @@ internal class NavigationViewModel : ViewModelBase
     }
 
     //public ICommand HomeCommand { get; set; }
+    public ICommand StencilCommand { get; set; }
     public ICommand SoundGenerationCommand { get; set; }
     public ICommand SettingsCommand { get; set; }
     public ICommand ControlTestCommand { get; set; }
@@ -29,6 +30,7 @@ internal class NavigationViewModel : ViewModelBase
     private void SoundGenerationPage(object obj) => CurrentView = new SoundGenerationViewModel();
     private void SettingsPage(object obj) => CurrentView = new SettingsViewModel();
     private void ControlTestPage(object obj) => CurrentView = new PortViewModel();
+    private void StencilPage(object obj) => CurrentView = new AudioGraphView();
 
     public NavigationViewModel()
     {
@@ -36,6 +38,7 @@ internal class NavigationViewModel : ViewModelBase
         SoundGenerationCommand = new RoutableCommand(SoundGenerationPage, (o) => true);
         SettingsCommand = new RoutableCommand(SettingsPage, (o) => true);
         ControlTestCommand = new RoutableCommand(ControlTestPage, (o) => true);
+        StencilCommand = new RoutableCommand(StencilPage, (o) => true);
 
         // Startup Page
         CurrentView = new SoundGenerationViewModel();

@@ -5,14 +5,128 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SoundDesigner.View"
              xmlns:viewModel="clr-namespace:SoundDesigner.ViewModel"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             xmlns:converter="clr-namespace:SoundDesigner.Converter"
+             xmlns:diagram="clr-namespace:Syncfusion.UI.Xaml.Diagram;assembly=Syncfusion.SfDiagram.Wpf"
+             xmlns:System="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.DataContext>
-        <viewModel:AudioGraphViewModel />
+        <viewModel:AudioGraphViewModel>
+            <!--To Represent HorizontalRuler,VerticalRuler-->
+            <viewModel:AudioGraphViewModel.HorizontalRuler>
+                <syncfusion:Ruler Orientation="Horizontal"/>
+            </viewModel:AudioGraphViewModel.HorizontalRuler>
+
+            <viewModel:AudioGraphViewModel.VerticalRuler>
+                <syncfusion:Ruler Orientation="Vertical"/>
+            </viewModel:AudioGraphViewModel.VerticalRuler>
+
+            <!--Initializes PageSettings-->
+            <viewModel:AudioGraphViewModel.PageSettings>
+                <syncfusion:PageSettings PageBorderBrush="Transparent"/>
+            </viewModel:AudioGraphViewModel.PageSettings>
+
+            <!--Initializes Node-->
+            <viewModel:AudioGraphViewModel.Nodes>
+                <syncfusion:NodeCollection/>
+            </viewModel:AudioGraphViewModel.Nodes>
+
+            <!--Initializes Connector-->
+            <viewModel:AudioGraphViewModel.Connectors>
+                <syncfusion:ConnectorCollection/>
+            </viewModel:AudioGraphViewModel.Connectors>
+
+            <!--Initializes Group-->
+            <viewModel:AudioGraphViewModel.Groups>
+                <syncfusion:GroupCollection/>
+            </viewModel:AudioGraphViewModel.Groups>
+
+            </viewModel:AudioGraphViewModel>
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--Initialize Shapes-->
+                <ResourceDictionary Source="/Syncfusion.SfDiagram.Wpf;component/Resources/BasicShapes.xaml" />
+                <ResourceDictionary Source="/Syncfusion.SfDiagram.Wpf;component/Resources/Bindingstyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converter:EnumDisplayNameConverter x:Key="EnumDisplayNameConverter"/>
+            <!--Style for Node-->
+            <Style TargetType="syncfusion:Node">
+                <Setter Property="ShapeStyle">
+                    <Setter.Value>
+                        <Style  TargetType="Path">
+                            <Setter Property="Fill" Value="#FF5B9BD5"/>
+                            <Setter Property="Stroke" Value="#FFC8C8C8"/>
+                            <Setter Property="Stretch" Value="Fill"/>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <DataTemplate x:Key="TitleTemplate">
+                <TextBlock x:Name="HeaderText" Text="{Binding}" FontSize="15" FontWeight="SemiBold" Padding="0,0,0,8">
+                </TextBlock>
+            </DataTemplate>
+            <ObjectDataProvider x:Key="DisplayMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="diagram:DisplayMode"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider x:Key="SymbolFilterDisplayMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="diagram:SymbolFilterDisplayMode"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider x:Key="SymbolsDisplayMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="diagram:SymbolsDisplayMode"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="8*" />
+        </Grid.ColumnDefinitions>
+
+        <syncfusion:Stencil x:Name="stencil" Width="250" Title="Shapes" TitleTemplate="{StaticResource TitleTemplate}"
+                            SymbolFilterDisplayMode="{Binding SymbolFilterDisplayMode}"
+                            DisplayMode="{Binding DisplayMode, Mode=TwoWay}"
+                            ShowSearchTextBox="{Binding ShowSearchTextBox}"
+                            ShowDisplayModeToggleButton="{Binding ShowDisplayModeToggleButton}"
+                            SymbolsDisplayMode="{Binding SymbolsDisplayMode,Mode=TwoWay}"
+                            Grid.Column="0" 
+                            Grid.Row="1" 
+                            Margin="5,5,0,5"
+                            SymbolFilters="{Binding Symbolfilters}"
+                            SelectedFilter="{Binding Selectedfilter}"
+                            Constraints="{Binding StencilConstraints}"
+                            ExpandMode="All">
+            <!--Initialize the stencil categories-->
+            <syncfusion:Stencil.Categories>
+                <syncfusion:StencilCategoryCollection>
+                    <!--Specify the basic shapes category with title and resource key-->
+                    <syncfusion:StencilCategory Title="Basic Shapes" Keys="{StaticResource BasicShapes}"/>
+                    <syncfusion:StencilCategory Title="Flow Shapes" Keys="{StaticResource FlowShapes}"/>
+                    <syncfusion:StencilCategory Title="Arrow Shapes" Keys="{StaticResource ArrowShapes}"/>
+                    <syncfusion:StencilCategory Title="DataFlow Shapes" Keys="{StaticResource DataFlowShapes}"/>
+                    <syncfusion:StencilCategory Title="UMLActivity Shapes" Keys="{StaticResource UMLActivity}"/>
+                    <syncfusion:StencilCategory Title="UMLUseCase Shapes" Keys="{StaticResource UMLUseCase}"/>
+                    <syncfusion:StencilCategory Title="UMLRelationship Shapes" Keys="{StaticResource UMLRelationship}"/>
+                    <syncfusion:StencilCategory Title="Swimlane Shapes" Keys="{StaticResource SwimlaneShapes}"/>
+                    <syncfusion:StencilCategory Title="BPMNEditor Shapes" Keys="{StaticResource BPMNEditorShapes}"/>
+                </syncfusion:StencilCategoryCollection>
+            </syncfusion:Stencil.Categories>
+            <syncfusion:Stencil.SymbolGroups>
+                <syncfusion:SymbolGroups>
+                    <!--Separate groups based on the key-->
+                    <syncfusion:SymbolGroupProvider MappingName="Key"/>
+                </syncfusion:SymbolGroups>
+            </syncfusion:Stencil.SymbolGroups>
+        </syncfusion:Stencil>
     </Grid>
 </UserControl>

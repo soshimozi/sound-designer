@@ -17,7 +17,9 @@
 
                     <Border x:Name="border"
                             Height="50"
-                            Width="150"
+                            Width="165"
+                            CornerRadius="5"
+                            Margin="0,3"
                             BorderThickness="0">
 
                         <Border.Background>
@@ -33,10 +35,8 @@
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Visibility="Collapsed"
+                                    Background="White"
                                     CornerRadius="2">
-                                <Border.Background>
-                                    <SolidColorBrush x:Name="IndicatorBrush" Color="{DynamicResource AccentColor}"></SolidColorBrush>
-                                </Border.Background>
                             </Border>
 
 
@@ -56,6 +56,36 @@
                                     Value="Visible" />
 
                         </Trigger>
+
+                        <EventTrigger RoutedEvent="Border.MouseEnter"
+                                      SourceName="border">
+
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="BorderBackground"
+                                                    Storyboard.TargetProperty="Color"
+                                                    From="Transparent"
+                                                    To="#3E434A"
+                                                    Duration="0:0:0.3" />
+                                </Storyboard>
+                            </BeginStoryboard>
+
+                        </EventTrigger>
+
+                        <EventTrigger RoutedEvent="Border.MouseLeave"
+                                      SourceName="border">
+
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="BorderBackground"
+                                                    Storyboard.TargetProperty="Color"
+                                                    From="#3E434A"
+                                                    To="Transparent"
+                                                    Duration="0:0:0.3" />
+                                </Storyboard>
+                            </BeginStoryboard>
+
+                        </EventTrigger>
 
                         <!--<EventTrigger RoutedEvent="Border.MouseEnter"
                                       SourceName="Indicator">
@@ -90,9 +120,9 @@
                         <Trigger Property="IsChecked"
                                  Value="True">
 
-                            <!--<Setter Property="Background"
+                            <Setter Property="Background"
                                     TargetName="border"
-                                    Value="#212529" />-->
+                                    Value="#212529" />
 
                             <Setter Property="Visibility"
                                     TargetName="Indicator"
