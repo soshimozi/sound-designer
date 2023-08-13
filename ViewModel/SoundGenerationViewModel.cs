@@ -10,13 +10,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using NAudio.Wave;
+using SoundDesigner.Event;
+using SoundDesigner.Helper;
 using SoundDesigner.Lib;
 using SoundDesigner.Lib.CommandRouting;
 using SoundDesigner.Model;
+using SynthesizerEngine.Core.Audio;
+using SynthesizerEngine.Core.Audio.Interface;
+using SynthesizerEngine.DSP;
+using SynthesizerEngine.Scale;
 
 namespace SoundDesigner.ViewModel;
 
-internal class SoundGenerationViewModel : ViewModelBase
+public record WaveformSelection(string? Description, WaveShape Shape);
+
+public class SoundGenerationViewModel : ViewModelBase
 {
     private float _attack = 0;
     private float _sustain = 100f;
@@ -24,16 +33,13 @@ internal class SoundGenerationViewModel : ViewModelBase
     private float _decay = 0;
     private double _detune = 0;
     private float _modFrequency = 0;
-    string[] _shapes = new[] { "sine", "square", "saw", "triangle" };
-    private string _selectedModShape = "saw";
+    private WaveformSelection? _selectedModShape;
 
-    private string _osc1Waveform = "sine";
-    private readonly string[] _osc1Ocataves = new[] { "32'", "16'", "8'" };
-    private string _osc1Octave = "16'";
+    private WaveformSelection? _osc1Waveform;
+    private string? _osc1Octave = "16'";
 
-    private string _osc2Waveform = "sine";
-    private readonly string[] _osc2Ocataves = new[] { "16'", "8'", "4'" };
-    private string _osc2Octave = "8'";
+    private WaveformSelection? _osc2Waveform;
+    private string? _osc2Octave = "8'";
 
     private float _osc1Tremolo = 0;
     private float _osc2Tremolo = 0;
@@ -48,15 +54,15 @@ internal class SoundGenerationViewModel : ViewModelBase
     private float _filterModulation = 0;
     private float _filterEnvelopeMix = 0;
 
-    private float _filterEnvelopeAttack = 0;
-    private float _filterEnvelopeSustain = 0;
-    private float _filterEnvelopeRelease = 0;
-    private float _filterEnvelopeDecay = 0;
+    private float _filterEnvelopeAttack = 20;
+    private float _filterEnvelopeSustain = 90;
+    private float _filterEnvelopeRelease = 10;
+    private float _filterEnvelopeDecay = 10;
 
-    private float _volumeEnvelopeAttack = 0;
-    private float _volumeEnvelopeSustain = 0;
-    private float _volumeEnvelopeRelease = 0;
-    private float _volumeEnvelopeDecay = 0;
+    private float _volumeEnvelopeAttack = 20;
+    private float _volumeEnvelopeSustain = 90;
+    private float _volumeEnvelopeRelease = 10;
+    private float _volumeEnvelopeDecay = 10;
 
     private float _reverb = 0;
     private float _drive = 0;
@@ -68,24 +74,107 @@ internal class SoundGenerationViewModel : ViewModelBase
     private bool _showReverbLabel = false;
     private bool _showDriveLabel = false;
 
-    public DelegateCommand? KeyCommand { get; private set; }
+    public DelegateCommand? ButtonPressedCommand { get; }
+    public DelegateCommand? ButtonReleasedCommand { get; }
 
     public ObservableCollection<string> MidiDevices { get; }
 
-    private readonly string[] _keyboardOctaves = new[] { "+3", "+2", "+1", "0", "-1", "-2", "-3" };
-    private string _keyboardOctave = "0";
-    private string _selectedDevice = "";
+    private string? _keyboardOctave = "0";
+    private string? _selectedDevice = "";
     public ObservableCollection<PianoKeyModel> Keys { get; set; }
 
-    public SoundGenerationViewModel()
-    {
+    private readonly RoundRobinObjectPool<SynthVoice> _voices;
 
-        KeyCommand = new DelegateCommand
+    private readonly AudioProvider _audioProvider = new AudioProvider();
+
+    private readonly List<SynthVoice> _playingVoices = new List<SynthVoice>();
+
+    private readonly IEventAggregator _eventAggregator;
+
+    public SoundGenerationViewModel(IEventAggregator eventAggregator)
+    {
+        _eventAggregator = eventAggregator;
+
+        Shapes = new WaveformSelection[]
+        {
+            new WaveformSelection("Sine", WaveShape.Sine),
+            new WaveformSelection("Sawtooth", WaveShape.Sawtooth),
+            new WaveformSelection("Inverse Sawtooth", WaveShape.InvSawtooth),
+            new WaveformSelection("Square", WaveShape.Square),
+            new WaveformSelection("Triangle", WaveShape.Triangle),
+            new WaveformSelection("Pulse", WaveShape.Pulse),
+        };
+
+        Osc1Waveform = Shapes[0];
+        Osc2Waveform = Shapes[1];
+
+        var voiceFactory = new Func<SynthVoice>(() =>
+        {
+            var voice = new Voice(_audioProvider, 0);
+            voice.Connect(_audioProvider.Output);
+            voice.NoteOff();
+
+            return new SynthVoice(false, voice, 0);
+        });
+
+        _voices = new(8, voiceFactory);
+        //for (var i = 0; i < 5; i++)
+        //{
+        //    _voices[i] = new SynthVoice(false, new Voice(_audioProvider, 0), 0);
+        //    _voices[i].Voice.Connect(_audioProvider.Output);
+        //    _voices[i].Voice.NoteOff();
+        //}
+
+        ButtonReleasedCommand = new DelegateCommand
         {
             CommandAction = (o) =>
             {
-                MessageBox.Show(o?.ToString());
+                if (o is not PianoKeyModel vm) return;
+
+                var playingVoice = _playingVoices.FirstOrDefault(pv => pv.NoteIndex == vm.NoteIndex);
+                if(playingVoice == null) return;
+
+                playingVoice.Playing = false;
+                playingVoice.Voice.NoteOff();
+                playingVoice.NoteIndex = -1;
+
+                _playingVoices.Remove(playingVoice);
             },
+            CanExecuteFunc = (o) => true
+        };
+
+        ButtonPressedCommand = new DelegateCommand
+        {
+            CommandAction = (o) =>
+            {
+                if (o is not PianoKeyModel vm) return;
+
+                // find an empty voice
+                var voice = _voices.GetNext((v) => !v.Playing);
+
+                if(voice == null) return;
+
+                voice.Voice.NoteOff();
+
+                voice.Playing = true;
+
+                if (KeyboardOctave == null) return;
+
+                var noteFrequency = GetFrequencyFromNoteAndOctave(vm.Note, vm.Octave + int.Parse(KeyboardOctave));
+                voice.VolumeAttack = Map(_volumeEnvelopeAttack, 0, 100, 0.01, 2500);
+                voice.VolumeDecay = Map(_volumeEnvelopeDecay, 0, 100, 0.01, 2500);
+                voice.VolumeRelease = Map(_volumeEnvelopeRelease, 0, 100, 0.01, 2500);
+                voice.VolumeSustain = Map(_volumeEnvelopeSustain, 0, 100, 0.01, 1);
+
+                voice.Voice.NoteOn(noteFrequency);
+                voice.NoteIndex = vm.NoteIndex;
+                voice.SetOsc1WaveShape(_osc1Waveform?.Shape ?? WaveShape.Sine);
+                voice.SetOsc2WaveShape(_osc2Waveform?.Shape ?? WaveShape.Sine);
+
+                _playingVoices.Add(voice);
+
+            },
+
             CanExecuteFunc = (o) => true
         };
 
@@ -94,26 +183,68 @@ internal class SoundGenerationViewModel : ViewModelBase
         Keys = new ObservableCollection<PianoKeyModel>();
         Keys.CollectionChanged += Keys_CollectionChanged;
 
-        for (int octave = 0; octave < 2; octave++)
+        for (var octave = 0; octave < 2; octave++)
         {
-            Keys.Add(new PianoKeyModel { Note = "C", IsBlackKey = false, Octave = octave });
-            Keys.Add(new PianoKeyModel { Note = "C#", IsBlackKey = true, Octave = octave });
-            Keys.Add(new PianoKeyModel { Note = "D", IsBlackKey = false, Octave = octave });
-            Keys.Add(new PianoKeyModel { Note = "D#", IsBlackKey = true, Octave = octave });
-            Keys.Add(new PianoKeyModel { Note = "E", IsBlackKey = false, Octave = octave });
-            Keys.Add(new PianoKeyModel { Note = "F", IsBlackKey = false, Octave = octave });
-            Keys.Add(new PianoKeyModel { Note = "F#", IsBlackKey = true, Octave = octave });
-            Keys.Add(new PianoKeyModel { Note = "G", IsBlackKey = false, Octave = octave });
-            Keys.Add(new PianoKeyModel { Note = "G#", IsBlackKey = true, Octave = octave });
-            Keys.Add(new PianoKeyModel { Note = "A", IsBlackKey = false, Octave = octave });
-            Keys.Add(new PianoKeyModel { Note = "A#", IsBlackKey = true, Octave = octave });
-            Keys.Add(new PianoKeyModel { Note = "B", IsBlackKey = false, Octave = octave });
+            Keys.Add(new PianoKeyModel { Note = "C", IsBlackKey = false, Octave = octave, NoteIndex = octave * 12 });
+            Keys.Add(new PianoKeyModel { Note = "C#", IsBlackKey = true, Octave = octave, NoteIndex = octave * 12 + 1 });
+            Keys.Add(new PianoKeyModel { Note = "D", IsBlackKey = false, Octave = octave, NoteIndex = octave * 12 + 2 });
+            Keys.Add(new PianoKeyModel { Note = "D#", IsBlackKey = true, Octave = octave, NoteIndex = octave * 12 + 3 });
+            Keys.Add(new PianoKeyModel { Note = "E", IsBlackKey = false, Octave = octave, NoteIndex = octave * 12 + 4 });
+            Keys.Add(new PianoKeyModel { Note = "F", IsBlackKey = false, Octave = octave, NoteIndex = octave * 12 + 5 });
+            Keys.Add(new PianoKeyModel { Note = "F#", IsBlackKey = true, Octave = octave, NoteIndex = octave * 12 + 6 });
+            Keys.Add(new PianoKeyModel { Note = "G", IsBlackKey = false, Octave = octave, NoteIndex = octave * 12 + 7 });
+            Keys.Add(new PianoKeyModel { Note = "G#", IsBlackKey = true, Octave = octave, NoteIndex = octave * 12 + 8 });
+            Keys.Add(new PianoKeyModel { Note = "A", IsBlackKey = false, Octave = octave, NoteIndex = octave * 12 + 9 });
+            Keys.Add(new PianoKeyModel { Note = "A#", IsBlackKey = true, Octave = octave, NoteIndex = octave * 12 + 10 });
+            Keys.Add(new PianoKeyModel { Note = "B", IsBlackKey = false, Octave = octave, NoteIndex = octave * 12 + 11 });
         }
 
+        var audioOutput = new WasapiOut();
+        audioOutput.Init(_audioProvider);
+        audioOutput.Play();
 
+        _eventAggregator.Subscribe<WindowClosingEvent>((o) =>
+        {
+            audioOutput.Stop();
+        });
     }
 
-    private void Keys_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private static float Map(float value, double inputStart, double inputEnd, double outputStart, double outputEnd)
+    {
+        return (float)(((value - inputStart) / (inputEnd - inputStart)) * (outputEnd - outputStart) + outputStart);
+    }
+
+
+    private int GetNoteIndexFromString(string note)
+    {
+        switch (note)
+        {
+            case "C": return 0;
+            case "C#": return 1;
+            case "D": return 2;
+            case "D#": return 3;
+            case "E": return 4;
+            case "F": return 5;
+            case "F#": return 6;
+            case "G": return 7;
+            case "G#": return 8;
+            case "A": return 9;
+            case "A#": return 10;
+            case "B": return 11;
+
+            default: return 0;
+        }
+    }
+
+    private double GetFrequencyFromNoteAndOctave(string note, int octave)
+    {
+        var index = GetNoteIndexFromString(note);
+        const double A4TuningBase = 16.352d;
+        var chromatic = new Scale(new List<int> {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
+        return chromatic.GetFrequency(index, A4TuningBase, octave + 3);
+    }
+
+    private void Keys_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         UpdateTotalKeysWidth();
     }
@@ -133,12 +264,12 @@ internal class SoundGenerationViewModel : ViewModelBase
         set => SetProperty(ref _totalKeysWidth, value);
     }
 
-    public string SelectedDevice
+    public string? SelectedDevice
     {
         get => _selectedDevice;
         set => SetProperty(ref _selectedDevice, value);
     }
-    public string KeyboardOctave
+    public string? KeyboardOctave
     {
         get => _keyboardOctave;
         set => SetProperty(ref _keyboardOctave, value);
@@ -296,75 +427,42 @@ internal class SoundGenerationViewModel : ViewModelBase
         set => SetProperty(ref _modFrequency, value);
     }
 
-    public float Decay
-    {
-        get => _decay;
-        set => SetProperty(ref _decay, value);
-    }
-    public float Release
-    {
-        get => _release;
-        set => SetProperty(ref _release, value);
-    }
+    public WaveformSelection[] Shapes { get; }
 
-    public float Sustain
-    {
-        get => _sustain;
-        set => SetProperty(ref _sustain, value);
-    }
-    public float Attack
-    {
-        get => _attack;
-        set => SetProperty(ref _attack, value);
-    }
+    public string[] KeyboardOctaves { get; } = new[] { "+3", "+2", "+1", "0", "-1", "-2", "-3" };
 
-    public double Detune
-    {
-        get => _detune;
-        set => SetProperty(ref _detune, value);
-    }
-
-    public string[] Shapes => _shapes;
-    public string[] KeyboardOctaves => _keyboardOctaves;
-
-    public string SelectedShape
+    public WaveformSelection? SelectedShape
     {
         get => _selectedModShape;
         set => SetProperty(ref _selectedModShape, value);
     }
 
-    public string Osc1Waveform
+    public WaveformSelection? Osc1Waveform
     {
         get => _osc1Waveform;
         set => SetProperty(ref _osc1Waveform, value);
     }
 
 
-    public string [] Osc1Octaves
-    {
-        get => _osc1Ocataves;
-    }
+    public string [] Osc1Octaves { get; } = new[] { "32'", "16'", "8'" };
 
 
-    public string Osc1Octave
+    public string? Osc1Octave
     {
         get => _osc1Octave;
         set => SetProperty(ref _osc1Octave, value);
     }
-    public string Osc2Waveform
+    public WaveformSelection? Osc2Waveform
     {
         get => _osc2Waveform;
         set => SetProperty(ref _osc2Waveform, value);
     }
 
 
-    public string[] Osc2Octaves
-    {
-        get => _osc2Ocataves;
-    }
+    public string[] Osc2Octaves { get; } = new[] { "16'", "8'", "4'" };
 
 
-    public string Osc2Octave
+    public string? Osc2Octave
     {
         get => _osc2Octave;
         set => SetProperty(ref _osc2Octave, value);
@@ -372,34 +470,7 @@ internal class SoundGenerationViewModel : ViewModelBase
 
     private void UpdateTotalKeysWidth()
     {
-        int whiteKeysCount = Keys.Count(key => !key.IsBlackKey);
+        var whiteKeysCount = Keys.Count(key => !key.IsBlackKey);
         TotalKeysWidth = whiteKeysCount * 40; // 40 is the width of the white keys
-    }
-
-
-    private double CalculateLeftPositionBasedOnNoteAndOctave(string keyNoteAndOctave)
-    {
-        int octave = int.Parse(keyNoteAndOctave[^1].ToString());
-        string note = keyNoteAndOctave.Substring(0, keyNoteAndOctave.Length - 1);
-
-        double baseOffset = 40 * octave * 7;
-
-        switch (note)
-        {
-            case "C": return 0 + baseOffset;
-            case "C#": return 25 + baseOffset;
-            case "D": return 40 + baseOffset;
-            case "D#": return 65 + baseOffset;
-            case "E": return 80 + baseOffset;
-            case "F": return 120 + baseOffset;
-            case "F#": return 145 + baseOffset;
-            case "G": return 160 + baseOffset;
-            case "G#": return 185 + baseOffset;
-            case "A": return 200 + baseOffset;
-            case "A#": return 225 + baseOffset;
-            case "B": return 240 + baseOffset;
-        }
-
-        return 0;
     }
 }

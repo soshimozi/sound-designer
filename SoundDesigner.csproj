@@ -120,8 +120,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
     <Folder Include="Extension\" />
+    <Folder Include="Behavior\" />
+    <Folder Include="Event\" />
+    <Folder Include="Service\Interface\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -129,7 +131,10 @@
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="MaterialDesignColors" Version="2.0.7" />
     <PackageReference Include="MaterialDesignThemes" Version="4.6.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="ModernUI.WPF" Version="1.0.9" />
+    <PackageReference Include="NAudio.Wasapi" Version="2.1.0" />
     <PackageReference Include="PixelLab.BOT" Version="6.0.2" />
     <PackageReference Include="PixelLab.Common" Version="6.0.2" />
     <PackageReference Include="PixelLab.Core" Version="6.0.2" />
@@ -143,6 +148,10 @@
     <PackageReference Include="Syncfusion.Shared.WPF" Version="21.1.35" />
     <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="21.1.35" />
     <PackageReference Include="Syncfusion.Tools.WPF" Version="21.1.35" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SynthEngine\SynthesizerEngine.csproj" />
   </ItemGroup>
 
   <ItemGroup>

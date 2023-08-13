@@ -10,24 +10,24 @@ namespace SoundDesigner.Control;
 public class SliderControl : UserControl
 {
 
-    private BitmapImage _image;
-    private readonly int _steps;
+    //private BitmapImage _image;
+    //private readonly int _steps;
 
 
     private double v0, y0;
 
     // 48 x 128
-    public SliderControl(int x, int y, int width, int height, int steps, string imagePath, double defaultValue)
+    public SliderControl()
     {
-        _image = new BitmapImage(new Uri(imagePath, UriKind.Relative));
-        Width = width;
-        Height = height;
-        _steps = steps;
+        //_image = new BitmapImage(new Uri(imagePath, UriKind.Relative));
+        //Width = width;
+        //Height = height;
+        //_steps = steps;
 
-        Margin = new Thickness(x, y, 0, 0);
+        //Margin = new Thickness(x, y, 0, 0);
         ClipToBounds = true;
 
-        Value = defaultValue;
+        //Value = defaultValue;
 
         MouseMove += SliderControl_OnMouseMove;
         MouseDown += SliderControl_MouseDown;
@@ -56,6 +56,41 @@ public class SliderControl : UserControl
         }
     }
 
+    public int? Steps
+    {
+        get => (int)GetValue(StepsProperty);
+        set => SetValue(StepsProperty, value);
+    }
+
+    public static readonly DependencyProperty StepsProperty =
+        DependencyProperty.Register("Steps", typeof(int), typeof(SliderControl), new PropertyMetadata(0, OnStepsChanged));
+
+    private static void OnStepsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is SliderControl slider)
+        {
+            slider.InvalidateVisual();
+        }
+    }
+
+
+    public ImageSource? Image
+    {
+        get => GetValue(ImageProperty) as ImageSource;
+        set => SetValue(ImageProperty, value);
+    }
+
+    public static readonly DependencyProperty ImageProperty =
+        DependencyProperty.Register("Image", typeof(ImageSource), typeof(SliderControl), new PropertyMetadata(null, OnImageChanged));
+
+    private static void OnImageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is SliderControl slider)
+        {
+            slider.InvalidateVisual();
+        }
+    }
+
 
     public double Value
     {
@@ -75,7 +110,7 @@ public class SliderControl : UserControl
     {
         if (d is SliderControl slider)
         {
-            slider.InvalidateVisual(); // Redraw the slider when the value changes
+            slider.InvalidateVisual();
         }
     }
 
@@ -84,12 +119,11 @@ public class SliderControl : UserControl
         base.OnRender(drawingContext);
 
 
-        int n = (int)Math.Floor(Value * _steps);
+        var n = (int)Math.Floor(Value * (Steps ?? 0));
 
-        // Your drawing code here, e.g., drawing lines, rectangles, and the image from the sprite sheet
-        // Refer to the original JavaScript code to replicate the drawing logic
-        drawingContext.DrawImage(_image, new Rect(0, -n * Height, Width, _image.PixelHeight));
+
+        if(Image is not BitmapSource bms) return;
+        
+        drawingContext.DrawImage(bms, new Rect(0, -n * Height, Width, bms.PixelHeight));
     }
-
-    // Your logic for handling mouse events (MouseDown, MouseMove, and MouseUp) goes here
 }

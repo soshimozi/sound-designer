@@ -8,6 +8,24 @@ public class PianoKeyModel : INotifyPropertyChanged
 
     public string NoteAndOctave => $"{Note}{Octave}";
     private string _note;
+
+    private int _noteIndex;
+
+    public int NoteIndex
+    {
+        get => _noteIndex;
+        set
+        {
+            var noteIndex = _noteIndex;
+            _noteIndex = value;
+
+            if (noteIndex != value)
+            {
+                OnPropertyChanged(nameof(NoteIndex));
+            }
+        }
+    }
+
     public string Note
     {
         get => _note;

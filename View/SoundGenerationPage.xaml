@@ -9,20 +9,402 @@
              xmlns:converter="clr-namespace:SoundDesigner.Converter"
              xmlns:control="clr-namespace:SoundDesigner.Control"
              xmlns:helper="clr-namespace:SoundDesigner.Helper"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behavior="clr-namespace:SoundDesigner.Behavior"
              mc:Ignorable="d" 
-             d:DesignHeight="650" d:DesignWidth="1000">
+             d:DesignHeight="750" d:DesignWidth="922">
     <UserControl.DataContext>
-        <viewModel:SoundGenerationViewModel />
+        <Binding Path="SoundGenerationViewModel" Source="{StaticResource ViewModelLocator}"></Binding>
     </UserControl.DataContext>
     <UserControl.Resources>
 
+        <SolidColorBrush x:Key="DarkBrush" Color="#101010">
+        </SolidColorBrush>
+
+        <SolidColorBrush x:Key="MediumBrush" Color="Yellow">
+        </SolidColorBrush>
+
+        <SolidColorBrush x:Key="KnobDarkBrush" Color="#0a0a0a">
+        </SolidColorBrush>
+
+        <SolidColorBrush x:Key="KnobMediumBrush" Color="#4e4e4e">
+        </SolidColorBrush>
+        
+        <Style x:Key="InactiveScrollRepeatButtonStyle"
+               TargetType="{x:Type RepeatButton}">
+            <Setter Property="Background"
+                                    Value="Transparent" />
+            <Setter Property="BorderBrush"
+                                    Value="Transparent" />
+            <Setter Property="IsTabStop"
+                                    Value="false" />
+            <Setter Property="Focusable"
+                                    Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Border 
+                            Height="6"
+                            CornerRadius="0,3,3,0" 
+                            BorderBrush="Transparent" 
+                            Opacity="0.38"
+                            Background="Black" />
+
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ActiveScrollRepeatButtonStyle"
+                               TargetType="{x:Type RepeatButton}">
+            <Setter Property="Background"
+                                    Value="Transparent" />
+            <Setter Property="BorderBrush"
+                                    Value="Transparent" />
+            <Setter Property="IsTabStop"
+                                    Value="false" />
+            <Setter Property="Focusable"
+                                    Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Border Height="6"
+                                CornerRadius="3,0,0,3" 
+                                BorderBrush="Transparent" 
+                                Background="{DynamicResource SecondaryHueDarkBrush}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="VolumeSliderThumb"
+           TargetType="{x:Type Thumb}">
+            <Setter Property="SnapsToDevicePixels"
+                Value="true" />
+            <Setter Property="Height"
+                Value="20" />
+            <Setter Property="Width"
+                Value="30" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <ControlTemplate.Resources>
+                            <Storyboard x:Key="HoverOn">
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="HoverShineBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                    <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
+                                                      Value="1" />
+                                </DoubleAnimationUsingKeyFrames>
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="HoverBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                    <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
+                                                      Value="1" />
+                                </DoubleAnimationUsingKeyFrames>
+
+                            </Storyboard>
+                            <Storyboard x:Key="HoverOff">
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="HoverShineBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                    <SplineDoubleKeyFrame KeyTime="00:00:00.3000000"
+                                                      Value="0" />
+                                </DoubleAnimationUsingKeyFrames>
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="HoverBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                    <SplineDoubleKeyFrame KeyTime="00:00:00.3000000"
+                                                      Value="0" />
+                                </DoubleAnimationUsingKeyFrames>
+
+                            </Storyboard>
+                            <Storyboard x:Key="PressedOn">
+
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="PressedBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                    <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
+                                                      Value="1" />
+                                </DoubleAnimationUsingKeyFrames>
+
+                            </Storyboard>
+                            <Storyboard x:Key="PressedOff">
+
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="PressedBorder"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                    <SplineDoubleKeyFrame KeyTime="00:00:00.3000000"
+                                                      Value="0" />
+                                </DoubleAnimationUsingKeyFrames>
+
+                            </Storyboard>
+                            <Storyboard x:Key="FocusedOn">
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="FocusVisualElement"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                    <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
+                                                      Value="1" />
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                            <Storyboard x:Key="FocussedOff">
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetName="FocusVisualElement"
+                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                    <SplineDoubleKeyFrame KeyTime="00:00:00.3000000"
+                                                      Value="0" />
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </ControlTemplate.Resources>
+                        <Grid>
+                            <Border x:Name="Background"
+                                Background="{StaticResource KnobMediumBrush}"
+                                BorderBrush="{StaticResource KnobDarkBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3" />
+                            <Border x:Name="HoverBorder"
+                                Opacity="0"
+                                Background="{StaticResource KnobMediumBrush}"
+                                BorderBrush="{StaticResource KnobDarkBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3" />
+                            <Border x:Name="HoverShineBorder"
+                                Opacity="0"
+                                Background="{DynamicResource HoverShineBrush}"
+                                BorderBrush="{StaticResource KnobDarkBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3" />
+                            <Border x:Name="PressedBorder"
+                                Opacity="0"
+                                BorderBrush="{StaticResource KnobDarkBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3"
+                                Background="{StaticResource VerticalPressedBrush}" />
+                            <Border x:Name="ShineBorder"
+                                BorderBrush="{StaticResource KnobDarkBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3"
+                                Background="{StaticResource VerticalShineBrush}"
+                                Opacity="1" />
+                            <Grid>
+                                <Canvas materialDesign:ElevationAssist.Elevation="Dp2">
+                                    <Canvas Margin="1,0,0,0">
+                                        <Rectangle Width="1.5"
+                                               Height="10"
+                                               Fill="#11FFFFFF"
+                                               Canvas.Left="9"
+                                               Canvas.Top="5" />
+                                        <Rectangle Width="1.5"
+                                               Height="10"
+                                               Fill="#11FFFFFF"
+                                               Canvas.Left="14"
+                                               Canvas.Top="5" />
+                                        <Rectangle Width="1.5"
+                                               Height="10"
+                                               Fill="#11FFFFFF"
+                                               Canvas.Left="19"
+                                               Canvas.Top="5" />
+                                    </Canvas>
+                                    <Rectangle Width="1.5"
+                                           Height="10"
+                                           Fill="#66000000"
+                                           Canvas.Left="9"
+                                           Canvas.Top="5" />
+                                    <Rectangle Width="1.5"
+                                           Height="10"
+                                           Fill="#66000000"
+                                           Canvas.Left="14"
+                                           Canvas.Top="5" />
+                                    <Rectangle Width="1.5"
+                                           Height="10"
+                                           Fill="#66000000"
+                                           Canvas.Left="19"
+                                           Canvas.Top="5" />
+                                </Canvas>
+
+                            </Grid>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"
+                                 Value="True">
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard Storyboard="{StaticResource HoverOff}"
+                                                 x:Name="HoverOff_BeginStoryboard" />
+                                </Trigger.ExitActions>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
+                                </Trigger.EnterActions>
+                            </Trigger>
+                            <Trigger Property="IsDragging"
+                                                     Value="True">
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard Storyboard="{StaticResource PressedOff}"
+                                                 x:Name="PressedOff_BeginStoryboard" />
+                                </Trigger.ExitActions>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard Storyboard="{StaticResource PressedOn}"
+                                                 x:Name="PressedOn_BeginStoryboard" />
+                                </Trigger.EnterActions>
+                            </Trigger>
+                            <Trigger Property="IsEnabled"
+                                                     Value="false">
+                                <Setter Property="Background"
+                                    TargetName="Background"
+                                    Value="{DynamicResource DisabledBackgroundBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background"
+                Value="{DynamicResource NormalBrush}" />
+            <Setter Property="BorderBrush"
+                Value="{DynamicResource NormalBorderBrush}" />
+            <Setter 
+            Property="BorderThickness"
+            Value="1,1,1,1" />
+        </Style>
+
+        <Style TargetType="{x:Type Slider}"
+           x:Key="SliderStyle">
+            <Setter Property="Background"
+                Value="{DynamicResource NormalBrush}" />
+            <Setter Property="BorderBrush"
+                Value="{DynamicResource NormalBorderBrush}" />
+            <Setter Property="Minimum"
+                Value="-1.0" />
+            <Setter Property="Maximum"
+                Value="1.0" />
+            <Setter Property="SmallChange"
+                Value="0.01" />
+            <Setter Property="LargeChange"
+                Value="0.1" />
+            <Setter Property="Orientation"
+                Value="Vertical" />
+            <Setter Property="HorizontalAlignment"
+                Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Slider}">
+                        <Grid x:Name="GridRoot">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition 
+                                Height="Auto"
+                                MinHeight="{TemplateBinding MinHeight}" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TickBar 
+                            Visibility="Collapsed"
+                             x:Name="TopTick"
+                             Height="4"
+                             Margin="0, 0, 0, 2"
+                             SnapsToDevicePixels="True"
+                             Placement="Top"
+                             Fill="{DynamicResource SecondaryHueDarkBrush}" />
+                            <Border 
+                            Grid.Row="1"
+                            Margin="0"
+                            x:Name="Border"
+                            Height="4"
+                            CornerRadius="3"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="1,1,1,1" />
+                            <Track 
+                            Grid.Row="1"
+                            x:Name="PART_Track">
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton 
+                                    Style="{DynamicResource InactiveScrollRepeatButtonStyle}"
+                                    Command="Slider.IncreaseLarge" />
+                                </Track.IncreaseRepeatButton>
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton 
+                                    Style="{DynamicResource ActiveScrollRepeatButtonStyle}"
+                                    Command="Slider.DecreaseLarge" />
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb 
+                                    Style="{StaticResource VolumeSliderThumb}"
+                                    Foreground="{x:Null}" />
+
+                                </Track.Thumb>
+                            </Track>
+                            <TickBar Visibility="Collapsed"
+                                                     Grid.Row="2"
+                                                     Margin="0, 2, 0, 0"
+                                                     x:Name="BottomTick"
+                                                     Height="4"
+                                                     SnapsToDevicePixels="True"
+                                                     Placement="Bottom"
+                                                     Fill="White" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="TickPlacement"
+                                                     Value="TopLeft">
+                                <Setter Property="Visibility"
+                                                        Value="Visible"
+                                                        TargetName="TopTick" />
+                            </Trigger>
+                            <Trigger Property="TickPlacement"
+                                                     Value="BottomRight">
+                                <Setter Property="Visibility"
+                                                        Value="Visible"
+                                                        TargetName="BottomTick" />
+                            </Trigger>
+                            <Trigger Property="TickPlacement"
+                                                     Value="Both">
+                                <Setter Property="Visibility"
+                                                        Value="Visible"
+                                                        TargetName="TopTick" />
+                                <Setter Property="Visibility"
+                                                        Value="Visible"
+                                                        TargetName="BottomTick" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled"
+                                                     Value="false">
+                                <Setter Property="Background"
+                                    Value="{DynamicResource DisabledBackgroundBrush}"
+                                    TargetName="Border" />
+                                <Setter 
+                                Property="BorderBrush"
+                                Value="{DynamicResource DisabledBorderBrush}"
+                                TargetName="Border" />
+                            </Trigger>
+                            <Trigger 
+                            Property="Orientation"
+                            Value="Vertical">
+                                <Setter 
+                                Property="LayoutTransform"
+                                TargetName="GridRoot">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter 
+                                TargetName="PART_Track"
+                                Property="Orientation"
+                                Value="Horizontal" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <converter:EnvelopeAttackValueConverter x:Key="EnvelopeAttackValueConverter" />
+
         <Style x:Key="SynthLabelStyle" TargetType="{x:Type Label}">
-            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="Padding" Value="0" />
+            <Setter Property="Padding" Value="2" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Label}">
@@ -48,8 +430,10 @@
         </Style>
         <DataTemplate x:Key="WhiteKeyTemplate">
             <Button 
-                Command="{Binding Path=Tag.KeyCommand, RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}" 
+                behavior:ButtonMouseBehavior.PressedCommand="{Binding Path=Tag.ButtonPressedCommand, RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}"
+                behavior:ButtonMouseBehavior.ReleasedCommand="{Binding Path=Tag.ButtonReleasedCommand, RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}"
                 CommandParameter="{Binding }" 
+                behavior:ButtonMouseBehavior.CommandParameter="{Binding}"
                 BorderBrush="Black"
                 BorderThickness="1" 
                 Background="White" 
@@ -78,8 +462,10 @@
         </DataTemplate>
         <DataTemplate x:Key="BlackKeyTemplate">
             <Button 
-                Command="{Binding Path=Tag.KeyCommand, RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}" 
+                behavior:ButtonMouseBehavior.PressedCommand="{Binding Path=Tag.ButtonPressedCommand, RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}"
+                behavior:ButtonMouseBehavior.ReleasedCommand="{Binding Path=Tag.ButtonReleasedCommand, RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}"
                 CommandParameter="{Binding }" 
+                behavior:ButtonMouseBehavior.CommandParameter="{Binding}"
                 BorderBrush="Black" 
                 BorderThickness="1" 
                 Background="Black" 
@@ -114,13 +500,9 @@
         <converter:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
 
         <Style x:Key="FadingBorderStyle" TargetType="Border">
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="#dddddd" />
-            <Setter Property="Width" Value="50"/>
-            <Setter Property="CornerRadius" Value="4"/>
-            <Setter Property="Background" Value="#232323"/>
-            <Setter Property="Opacity" Value="0" />
-
+            <Setter Property="Margin" Value="2,0,2,0" />
+            <Setter Property="BorderThickness" Value="0,0,1,1" />
+            <Setter Property="BorderBrush" Value="Black" />
             <Style.Triggers>
                 <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                     <BeginStoryboard>
@@ -170,7 +552,8 @@
                                 Text="{TemplateBinding Header}" 
                                 Margin="8, 0, 0, 0" 
                                 Grid.ZIndex="2" 
-                                Foreground="{DynamicResource PrimaryHueLightBrush}" 
+                                Foreground="White" 
+                                FontWeight="Bold"
                                 Background="#222"
                                 Padding="2"
                                 Width="Auto"
@@ -215,6 +598,7 @@
                                   materialDesign:HintAssist.Hint="Shape"
                                   ItemsSource="{Binding Shapes}" 
                                   SelectedItem="{Binding SelectedShape, Mode=TwoWay}"  
+                                  DisplayMemberPath="Description"
                                   VerticalAlignment="Top" 
                                   HorizontalAlignment="Left"
                                   Width="90"
@@ -366,6 +750,7 @@
                                           materialDesign:HintAssist.Hint="waveform"
                                           ItemsSource="{Binding Shapes}" 
                                           SelectedItem="{Binding Osc1Waveform, Mode=TwoWay}"  
+                                          DisplayMemberPath="Description"
                                           VerticalAlignment="Top" 
                                           HorizontalAlignment="Left"
                                           Width="110"
@@ -477,6 +862,7 @@
                                           materialDesign:HintAssist.Hint="waveform"
                                           ItemsSource="{Binding Shapes}" 
                                           SelectedItem="{Binding Osc2Waveform, Mode=TwoWay}"  
+                                          DisplayMemberPath="Description"
                                           VerticalAlignment="Top" 
                                           HorizontalAlignment="Left"
                                           Width="110"
@@ -589,15 +975,22 @@
 
                         <Grid Margin="0, 20, 0, 0">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Border 
+                            <Border  Style="{StaticResource FadingBorderStyle}" >
+                                <Label
+                                    Style="{StaticResource SynthLabelStyle}"
+                                    Content="{Binding Path=FilterCutoff, Converter={StaticResource FrequencyValueConverter}}" />
+
+                            </Border>
+
+                            <!--<Border 
                                 Style="{StaticResource FadingBorderStyle}" Width="Auto">
                                 <Label
                                     Style="{StaticResource SynthLabelStyle}"
                                     Content="{Binding Path=FilterCutoff, Converter={StaticResource FrequencyValueConverter}}" />
-                            </Border>
+                            </Border>-->
 
                             <StackPanel Grid.Row="1">
 
@@ -751,6 +1144,52 @@
                     <GroupBox Grid.Row="0" Header="filter envelope" Style="{StaticResource FieldsetStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Margin="0, 5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Slider Minimum="0" Maximum="100" TickFrequency="10" TickPlacement="BottomRight" Value="{Binding FilterEnvelopeAttack, Mode=TwoWay}" Style="{StaticResource SliderStyle}"/>
+                                <Label Grid.Row="1" Content="Attack" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"></Label>
+                            </Grid>
+
+                            <Grid Grid.Column="1" Margin="0, 5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Slider Minimum="0" Maximum="100" TickFrequency="10" TickPlacement="BottomRight" Value="{Binding FilterEnvelopeDecay, Mode=TwoWay}" Style="{StaticResource SliderStyle}"/>
+                                <Label Grid.Row="1" Content="Decay" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"></Label>
+                            </Grid>
+
+                            <Grid Grid.Column="2" Margin="0, 5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Slider Minimum="0" Maximum="100" TickFrequency="10" TickPlacement="BottomRight" Style="{StaticResource SliderStyle}" Value="{Binding FilterEnvelopeSustain, Mode=TwoWay}"/>
+                                <Label Grid.Row="1" Content="Sustain" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"></Label>
+                            </Grid>
+
+                            <Grid Grid.Column="3" Margin="0, 5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Slider Minimum="0" Maximum="100" TickFrequency="10" TickPlacement="BottomRight" Style="{StaticResource SliderStyle}" Value="{Binding FilterEnvelopeRelease, Mode=TwoWay}"/>
+                                <Label Grid.Row="1" Content="Release" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"></Label>
+                            </Grid>
+
+                        </Grid>
+
+                        <!--<Grid>
+                            <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="90"/>
                                 <ColumnDefinition Width="90"/>
                                 <ColumnDefinition Width="90"/>
@@ -901,11 +1340,56 @@
                                 </StackPanel>
                             </Grid>
 
-                        </Grid>
+                        </Grid>-->
 
                     </GroupBox>
                     <GroupBox Grid.Row="1" Header="volume envelope" Style="{StaticResource FieldsetStyle}">
                         <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Margin="0, 5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Slider Minimum="0" Maximum="100" TickFrequency="10" TickPlacement="BottomRight" Style="{StaticResource SliderStyle}" Value="{Binding VolumeEnvelopeAttack, Mode=TwoWay}"/>
+                                <Label Grid.Row="1" Content="Attack" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"></Label>
+                            </Grid>
+
+                            <Grid Grid.Column="1" Margin="0, 5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Slider Minimum="0" Maximum="100" TickFrequency="10" TickPlacement="BottomRight" Style="{StaticResource SliderStyle}" Value="{Binding VolumeEnvelopeDecay, Mode=TwoWay}"/>
+                                <Label Grid.Row="1" Content="Decay" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"></Label>
+                            </Grid>
+
+                            <Grid Grid.Column="2" Margin="0, 5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Slider Minimum="0" Maximum="100" TickFrequency="10" TickPlacement="BottomRight" Style="{StaticResource SliderStyle}" Value="{Binding VolumeEnvelopeSustain, Mode=TwoWay}"/>
+                                <Label Grid.Row="1" Content="Sustain" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"></Label>
+                            </Grid>
+
+                            <Grid Grid.Column="3" Margin="0, 5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Slider Minimum="0" Maximum="100" TickFrequency="10" TickPlacement="BottomRight" Style="{StaticResource SliderStyle}" Value="{Binding VolumeEnvelopeRelease, Mode=TwoWay}"/>
+                                <Label Grid.Row="1" Content="Release" HorizontalAlignment="Center" Foreground="White" FontWeight="Bold"></Label>
+                            </Grid>
+
+                        </Grid>
+                            <!--<Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="90"/>
                                 <ColumnDefinition Width="90"/>
@@ -922,7 +1406,7 @@
                                 <Border 
                                 Style="{StaticResource FadingBorderStyle}">
                                     <Label Style="{StaticResource SynthLabelStyle}"
-                                           Content="{Binding Path=VolumeEnvelopeAttack}" />
+                                           Content="{Binding Path=VolumeEnvelopeAttack, Converter={StaticResource EnvelopeAttackValueConverter}}" />
                                 </Border>
                                 <StackPanel Grid.Row="1">
 
@@ -930,8 +1414,8 @@
                                     VerticalAlignment="Top" 
                                     Value="{Binding Path=VolumeEnvelopeAttack, Mode=TwoWay}" 
                                     Maximum="100"
-                                    Minimum="0"
-                                    Step="10"
+                                    Minimum="1"
+                                    Logarithmic="True"
                                     Margin="0,2,0,0" 
                                     Width="64" Height="64">
                                         <control:KnobControl.SpriteSheet>
@@ -1041,7 +1525,7 @@
 
                                 </StackPanel>
                             </Grid>
-                        </Grid>
+                        </Grid>-->
                     </GroupBox>
                     <GroupBox Grid.Row="2" Header="master" Style="{StaticResource FieldsetStyle}">
                         <Grid>

@@ -7,8 +7,7 @@
              xmlns:viewModel="clr-namespace:SoundDesigner.ViewModel"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              xmlns:converter="clr-namespace:SoundDesigner.Converter"
-             xmlns:diagram="clr-namespace:Syncfusion.UI.Xaml.Diagram;assembly=Syncfusion.SfDiagram.Wpf"
-             xmlns:System="clr-namespace:System;assembly=System.Runtime"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -69,19 +68,19 @@
                 <TextBlock x:Name="HeaderText" Text="{Binding}" FontSize="15" FontWeight="SemiBold" Padding="0,0,0,8">
                 </TextBlock>
             </DataTemplate>
-            <ObjectDataProvider x:Key="DisplayMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider x:Key="DisplayMode" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="diagram:DisplayMode"/>
+                    <x:Type TypeName="syncfusion:DisplayMode"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <ObjectDataProvider x:Key="SymbolFilterDisplayMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider x:Key="SymbolFilterDisplayMode" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="diagram:SymbolFilterDisplayMode"/>
+                    <x:Type TypeName="syncfusion:SymbolFilterDisplayMode"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <ObjectDataProvider x:Key="SymbolsDisplayMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider x:Key="SymbolsDisplayMode" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="diagram:SymbolsDisplayMode"/>
+                    <x:Type TypeName="syncfusion:SymbolsDisplayMode"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
         </ResourceDictionary>

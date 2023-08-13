@@ -13,7 +13,7 @@
     <Grid Margin="0, 0, 0,5">
 
         <Grid.DataContext>
-            <viewModel:NavigationViewModel />
+            <Binding Path="NavigationViewModel" Source="{StaticResource ViewModelLocator}"></Binding>
         </Grid.DataContext>
 
         <!--// Window Border //--><!--

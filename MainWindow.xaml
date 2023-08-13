@@ -7,6 +7,7 @@
                            xmlns:vm="clr-namespace:SoundDesigner.ViewModel"
                            xmlns:lib="clr-namespace:SoundDesigner.Lib"
                            xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+                           xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                            mc:Ignorable="d"
                            Title="{Binding Title}" 
                            Height="860"
@@ -20,9 +21,17 @@
                            Background="Transparent">
     
     <Window.DataContext>
-        <vm:MainWindowViewModel />
+        <Binding 
+            Path="MainWindowViewModel" 
+            Source="{StaticResource ViewModelLocator}" />
     </Window.DataContext>
 
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding WindowClosing}" CommandParameter="{Binding}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <mui:ModernWindow.TitleLinks>
         <mui:Link DisplayName="Help" Source="/Content/About.xaml" />
    </mui:ModernWindow.TitleLinks>

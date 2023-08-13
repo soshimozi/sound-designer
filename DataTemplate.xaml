@@ -15,8 +15,8 @@
         <view:ControlTestPage />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type vm:PortViewModel}">
-        <view:PortView />
+    <DataTemplate DataType="{x:Type vm:AudioGraphViewModel}">
+        <view:AudioGraphView />
     </DataTemplate>
 
 </ResourceDictionary>

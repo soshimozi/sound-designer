@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -166,11 +167,12 @@ public class ControlPanel : UserControl
     public SliderControl AddSlider(string name, int x, int y, int width, int height,
         string imageSource, int steps, double defaultValue)
     {
-        var slider = new SliderControl(x, y, width, height, steps, imageSource, defaultValue);
-        PanelCanvas?.Children.Add(slider);
-        _controls[name] = slider;
+        throw new NotFiniteNumberException();
+        //var slider = new SliderControl(x, y, width, height, steps, imageSource, defaultValue);
+        //PanelCanvas?.Children.Add(slider);
+        //_controls[name] = slider;
 
-        return slider;
+        //return slider;
     }
 
 

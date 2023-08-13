@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SoundDesigner"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:helper="clr-namespace:SoundDesigner.Helper"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
@@ -30,9 +31,13 @@
 
                 <ResourceDictionary Source="Style/SystemButton.xaml"/>
                 <ResourceDictionary Source="Theme/SoundDesignerModernWindow.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
 
+            <helper:ViewModelLocator x:Key="ViewModelLocator" />
+
         </ResourceDictionary>
+
 
     </Application.Resources>
 </Application>

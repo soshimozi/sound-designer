@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SoundDesigner.Lib;
 using SoundDesigner.Lib.CommandRouting;
 using SoundDesigner.View;
 
 namespace SoundDesigner.ViewModel;
 
-internal class NavigationViewModel : ViewModelBase
+public class NavigationViewModel : ViewModelBase
 {
-    private object _currentView;
-    public object CurrentView
+    private object? _currentView;
+    public object? CurrentView
     {
         get => _currentView;
         set => SetProperty(ref _currentView, value);
@@ -27,10 +29,10 @@ internal class NavigationViewModel : ViewModelBase
     public ICommand ControlTestCommand { get; set; }
 
     //private void HomePage(object obj) => CurrentView = new HomePageViewModel();
-    private void SoundGenerationPage(object obj) => CurrentView = new SoundGenerationViewModel();
-    private void SettingsPage(object obj) => CurrentView = new SettingsViewModel();
-    private void ControlTestPage(object obj) => CurrentView = new PortViewModel();
-    private void StencilPage(object obj) => CurrentView = new AudioGraphView();
+    private void SoundGenerationPage(object obj) => CurrentView = Ioc.Default.GetService<SoundGenerationViewModel>();
+    private void SettingsPage(object obj) => CurrentView = Ioc.Default.GetService<SettingsViewModel>();
+    private void ControlTestPage(object obj) => CurrentView = Ioc.Default.GetService<ControlTestViewModel>();
+    private void StencilPage(object obj) => CurrentView = Ioc.Default.GetService<AudioGraphViewModel>();
 
     public NavigationViewModel()
     {
@@ -41,6 +43,6 @@ internal class NavigationViewModel : ViewModelBase
         StencilCommand = new RoutableCommand(StencilPage, (o) => true);
 
         // Startup Page
-        CurrentView = new SoundGenerationViewModel();
+        CurrentView = Ioc.Default.GetService<SoundGenerationViewModel>();
     }
 }
